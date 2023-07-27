@@ -34,6 +34,8 @@ class Neurons{
         
         void evolve(Matrix const&);
 
+        void evolveRandom(Matrix const&);
+
         double distance2From(Neurons const&);
 
 };

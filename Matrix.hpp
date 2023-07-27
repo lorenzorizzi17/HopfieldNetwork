@@ -45,16 +45,16 @@ class Matrix {
         //getter for the ij element
         double get(int i, int j) const   
         {
-            return (matrix_[i - 1][j - 1]);
+            return (matrix_[i][j]);
         }
         //setter for the ij element
         double& set(int i, int j) 
         {
-            return (matrix_[i - 1][j - 1]);
+            return (matrix_[i][j]);
         }
         void set(int i, int j, double element) 
         {
-            matrix_[i - 1][j - 1] = element;
+            matrix_[i][j] = element;
         }
         //size of the matrix
         int size() const {        

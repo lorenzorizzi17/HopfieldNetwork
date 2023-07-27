@@ -4,11 +4,11 @@
 Matrix operator*(Matrix const& A, Matrix const& B)         
 {
     Matrix result{A.size(),0};
-    for (int i = 1; i <=  A.size(); i++)
+    for (int i = 0; i <  A.size(); i++)
     {
-        for (int j = 1; j <= A.size(); j++)
+        for (int j = 0; j < A.size(); j++)
         {
-            for (int z = 1; z <= A.size(); z++) {
+            for (int z = 0; z < A.size(); z++) {
                result.set(i,j) += A.get(i,z)*B.get(z,j);
             }
         }
@@ -19,9 +19,9 @@ Matrix operator*(Matrix const& A, Matrix const& B)
 Matrix operator+(Matrix const& A, Matrix const& B) //overload di operator+. Implementa la somma matrice per matrice
 {
     Matrix result{A.size(),0};
-    for (int i = 1; i <=  A.size(); i++)
+    for (int i = 0; i <  A.size(); i++)
     {
-        for (int j = 1; j <= A.size(); j++)
+        for (int j = 0; j < A.size(); j++)
         {
             result.set(i,j) += A.get(i,j)+B.get(i,j);
         }
