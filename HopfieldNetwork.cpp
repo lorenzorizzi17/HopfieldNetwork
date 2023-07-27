@@ -2,10 +2,14 @@
 #include "Neurons.hpp"
 #include<vector>
 #include<algorithm>
+#include <SFML/Graphics.hpp>
 
 
 int main() {
     srand((unsigned) time(NULL));
+    unsigned const display_height = 0.95 * sf::VideoMode::getDesktopMode().height; //=768
+    int const R = 100;
+    int const fps = 60;
     const int N = 10;
 
     //random initializing neurons with the default ctor
@@ -33,12 +37,47 @@ int main() {
     std::cout << "\nPrinting synaptic matrix... \n";
     J.print();
 
-    //let the system evolve 
-    for (int t = 0; t < 10; t++)
+    
+    //graphics
+    sf::RenderWindow window(sf::VideoMode(display_height, display_height), "Hopfield Network", sf::Style::Default);
+    window.setFramerateLimit(fps);
+    while (window.isOpen())
     {
-       initialState.evolve(J);
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+            {
+                window.close();
+            }
+            if (event.type==sf::Event::KeyPressed)
+                {
+                    initialState.evolve(J);
+                }
+        }
+        window.clear(sf::Color::White);
+        //draw the neurons
+        for (int i = 0; i < N; i++)
+        {
+            double theta = 2*M_PI/N * i;
+            sf::CircleShape unity(10);
+            unity.setPosition(0.5*display_height+R*std::sin(theta),0.5*display_height-R*std::cos(theta));
+            if (initialState.getState(i)==1) {
+                unity.setFillColor(sf::Color::Blue);
+            } else {
+                unity.setFillColor(sf::Color::Red);
+            }
+            window.draw(unity);
+        }
+        
+
+        //neurons evolution
+        
+
+        window.display();
     }
     
+
     std::cout << "\nPrinting final state...\n";
     initialState.printStatus();
     std::cout << "\nThe quadratic distance between the final state and the memory is " << initialState.distance2From(memory) << '\n';
