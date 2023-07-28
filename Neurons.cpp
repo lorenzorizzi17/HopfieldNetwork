@@ -73,6 +73,10 @@ void Neurons::setState(std::vector<int> activationValues){
         activationValues_ = activationValues;
 }
 
+void Neurons::setState(int i, int a){
+    activationValues_[i] = a;
+}
+
 int Neurons::getState(int i) const{
     return activationValues_[i];
 }

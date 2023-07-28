@@ -28,6 +28,8 @@ class Neurons{
 
         void setState(std::vector<int>);
 
+        void setState(int, int);
+
         void randomFill(const int);
 
         void printStatus();
