@@ -10,7 +10,7 @@ int main() {
     srand((unsigned) time(NULL));
 
     //graphic constants and parameters
-    const int N = 25;     //n. of neurons (perfect square)
+    const int N = 49;     //n. of neurons (perfect square)
     const int n = std::sqrt(N);
     unsigned const display_height = 0.95 * sf::VideoMode::getDesktopMode().height; //=768
     int const fps = 60;
@@ -38,16 +38,27 @@ int main() {
     sf::Color color(157,154,183);
     buttonMemory.setFillColor(color);
 
+    sf::RectangleShape buttonShuffle(sf::Vector2f(200.f, 30.f));
+    buttonShuffle.setPosition(0.38*display_height,0.85*display_height);
+    buttonShuffle.setFillColor(color);
+
     sf::Font font;
     if (!font.loadFromFile("font.ttf")){
         std::cerr << "Errore nel caricamento del font";
     }
-    sf::Text text;
-    text.setFont(font);
-    text.setString("Save memory");
-    text.setStyle(sf::Text::Bold | sf::Text::Underlined);
-    text.setPosition(0.4*display_height,0.1*display_height);
-    text.setFillColor(sf::Color::Black);
+    sf::Text textSaveMemory;
+    sf::Text textShuffle;
+    textSaveMemory.setFont(font);
+    textSaveMemory.setString("Save memory");
+    textSaveMemory.setStyle(sf::Text::Bold | sf::Text::Underlined);
+    textSaveMemory.setPosition(0.4*display_height,0.1*display_height);
+    textSaveMemory.setFillColor(sf::Color::Black);
+    textShuffle.setFont(font);
+    textShuffle.setCharacterSize(20);
+    textShuffle.setString("Shuffle neurons");
+    textShuffle.setStyle(sf::Text::Bold);
+    textShuffle.setPosition(0.4*display_height,0.85*display_height);
+    textShuffle.setFillColor(sf::Color::Black);
     
     //graphic loop
     while (window.isOpen())
@@ -79,7 +90,8 @@ int main() {
                 if (event.mouseButton.button == sf::Mouse::Left){
                     double x = event.mouseButton.x;
                     double y = event.mouseButton.y;
-                    if (((x-0.38*display_height> 0)&&(x-0.38*display_height<250.f))&&(((y-0.1*display_height> 0)&&(y-0.1*display_height<55.f))))
+                    //pressed save memory
+                    if (((x-0.38*display_height> 0)&&(x-0.38*display_height<250.f))&&(((y-0.1*display_height> 0)&&(y-0.1*display_height<30.f))))
                     {
                         std::cerr << "\nSaved memory!\n";
                         memories.push_back(initialState);
@@ -92,6 +104,13 @@ int main() {
                                 J.set(i,j, coefficient);
                             } 
                         }
+                    }
+                    //pressed shuffle neurons
+                    if (((x-0.38*display_height> 0)&&(x-0.38*display_height<200.f))&&(((y-0.85*display_height> 0)&&(y-0.85*display_height<45.f))))
+                    {
+                        std::cerr << "\nShuffling neurons\n";
+                        Neurons n = Neurons(N);
+                        initialState.setState(n.getVector());
                     }
                 }
             }
@@ -117,7 +136,9 @@ int main() {
         }
         //drawing text, button
         window.draw(buttonMemory);
-        window.draw(text);
+        window.draw(buttonShuffle);
+        window.draw(textSaveMemory);
+        window.draw(textShuffle);
         window.display();
     }
 
