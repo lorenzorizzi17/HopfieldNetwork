@@ -40,6 +40,12 @@ class Neurons{
 
         double distance2From(Neurons const&);
 
+        void drawL();
+
+        void drawX();
+
+        void drawT();
+
 };
 
 #endif

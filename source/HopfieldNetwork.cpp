@@ -10,11 +10,12 @@ int main() {
     srand((unsigned) time(NULL));
 
     //graphic constants and parameters
-    const int N = 49;     //n. of neurons (perfect square)
+    const int N = 144;     //n. of neurons (perfect square)
     const int n = std::sqrt(N);
     unsigned const display_height = 0.95 * sf::VideoMode::getDesktopMode().height; //=768
     int const fps = 60;
     int const R = display_height/(4*n);
+    double alpha = (double) 1;
 
 
     //random creation of the initial network state
@@ -43,7 +44,7 @@ int main() {
     buttonShuffle.setFillColor(color);
 
     sf::Font font;
-    if (!font.loadFromFile("font.ttf")){
+    if (!font.loadFromFile("../graphics/font.ttf")){
         std::cerr << "Errore nel caricamento del font";
     }
     sf::Text textSaveMemory;
@@ -72,7 +73,15 @@ int main() {
             }
             //evolve
             if (event.type==sf::Event::KeyPressed){
-                initialState.evolveRandom(J);
+                if(event.key.code==sf::Keyboard::Space){
+                    initialState.evolve(J);
+                } else if (event.key.code==sf::Keyboard::L){
+                    initialState.drawL();
+                } else if (event.key.code==sf::Keyboard::X){
+                    initialState.drawX();
+                } else if (event.key.code==sf::Keyboard::T){
+                    initialState.drawT();
+                }
             }
             if (event.type ==sf::Event::MouseButtonPressed){
                 //change the states by pressing on neurons
@@ -99,11 +108,12 @@ int main() {
                         {
                             for (int j = 0; j< N; j++)
                             {
-                                double invN = 1/(double)N;
-                                double coefficient = J.get(i,j)+initialState.getState(i)*initialState.getState(j)/invN;
+                                double coefficient = J.get(i,j)+(double)initialState.getState(i)*(double)initialState.getState(j)*alpha;
                                 J.set(i,j, coefficient);
                             } 
                         }
+                        std::cerr << "\nYou have now succesfully stored " << memories.size() << " memories\n";
+                        //J.print();
                     }
                     //pressed shuffle neurons
                     if (((x-0.38*display_height> 0)&&(x-0.38*display_height<200.f))&&(((y-0.85*display_height> 0)&&(y-0.85*display_height<45.f))))

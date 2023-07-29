@@ -34,7 +34,7 @@ vector<double> operator*(Matrix const& A, vector<T> const& v)
         double ris = 0;
         for (int j = 0; j <  static_cast<int>(v.size()); j++)
         {
-            ris = ris + (A.get(i, j) * v[j-1]);
+            ris = ris + (A.get(i, j) * v[j]);
         }
         result.push_back(ris);
     }
@@ -140,3 +140,56 @@ double Neurons::distance2From(Neurons const& neur){
     return norm2(a);
 }
 
+void Neurons::drawL(){
+    int n = std::sqrt(N_);
+    for (int i = 0; i < N_; i++)
+    {
+        if (i>n*n-n)
+        {
+            activationValues_[i]=1;
+        } else {
+            if (i%n==0)
+            {
+                activationValues_[i]=1;
+            }
+            else {
+                activationValues_[i] = -1;
+            } 
+        } 
+    }  
+}
+
+void Neurons::drawX(){
+    int n = std::sqrt(N_);
+    for (int i = 0; i < N_; i++)
+    {
+        
+    int column = i%n;
+    int row = (i-column)/n;
+        if (row==column)
+        {
+            activationValues_[i] = 1;
+        } else if (row+column==n-1){
+            activationValues_[i] = 1;
+        } else {
+            activationValues_[i] = -1;
+        }
+    } 
+}
+
+void Neurons::drawT(){
+    int n = std::sqrt(N_);
+    for (int i = 0; i < N_; i++)
+    {
+    int column = i%n;
+    int row = (i-column)/n;
+    if (row == 0)
+    {
+        activationValues_[i] = 1;
+    } else if (column == n/2) {
+        activationValues_[i] = 1;
+    } else {
+        activationValues_[i] = -1;
+    }
+  }
+}
