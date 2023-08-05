@@ -12,7 +12,7 @@ std::mt19937 g(rd());
 
 template <class T>
 int sign(T a){
-    if (a>0)
+    if (a>=0)
     {
         return 1;
     } else {
@@ -34,7 +34,7 @@ vector<double> operator*(Matrix const& A, vector<T> const& v)
         double ris = 0;
         for (int j = 0; j <  static_cast<int>(v.size()); j++)
         {
-            ris = ris + (A.get(i, j) * v[j]);
+            ris += A.get(i, j) * v[j];
         }
         result.push_back(ris);
     }
@@ -63,12 +63,23 @@ double norm2(vector<T> const v) {
     return sqrt(ris);
 }
 
+//send to ostream a vector
+template <class T> 
+std::ostream& operator<<(std::ostream& os, vector<T> const& v) {
+    for (auto it = v.begin(); it != v.end(); it++)   
+    {
+        os << *it << ", ";
+    };
+    os << ")" << '\n';
+    return os;
+}
+
 
 //////////////////////////////////////////////
 ///////// neurons member functions ///////////
 //////////////////////////////////////////////
 
-void Neurons::setState(std::vector<int> activationValues){
+void Neurons::setState(std::vector<double> activationValues){
         //std::cout << "Warning: activation value should range from -1 to 1. Temporarily setting activationValue to 1";
         activationValues_ = activationValues;
 }
@@ -77,22 +88,22 @@ void Neurons::setState(int i, int a){
     activationValues_[i] = a;
 }
 
-int Neurons::getState(int i) const{
+double Neurons::getState(int i) const{
     return activationValues_[i];
 }
 
-std::vector<int> Neurons::getVector() const {
+std::vector<double> Neurons::getVector() const {
     return activationValues_;
 }
 
-void Neurons::randomFill(const int N){
+void Neurons::randomFill(const double N){
     for (int i = 0; i < N; i++)
     {
         int rand = (std::rand())%(10);
     if (rand <5){
-        activationValues_.push_back(1);
+        activationValues_.push_back(1.f);
     } else {
-        activationValues_.push_back(-1);
+        activationValues_.push_back(-1.f);
     }
     }
 }
@@ -110,7 +121,7 @@ void Neurons::evolve(Matrix const& J){
     auto supp = J*activationValues_;
     for (int i = 0; i < N_; i++)
     {
-        if (supp[i]>0)
+        if (supp[i] >= 0)
         {
             activationValues_[i] = 1;
         } else {
@@ -133,6 +144,7 @@ void Neurons::evolveRandom(Matrix const& J){
         }
         activationValues_[index] = sign(res);
     }
+std::cout << v << '\n';
 }
 
 double Neurons::distance2From(Neurons const& neur){
@@ -140,8 +152,9 @@ double Neurons::distance2From(Neurons const& neur){
     return norm2(a);
 }
 
-void Neurons::drawL(){
+void Neurons::drawL(bool comple){
     int n = std::sqrt(N_);
+    if (comple){
     for (int i = 0; i < N_; i++)
     {
         if (i>n*n-n)
@@ -156,7 +169,24 @@ void Neurons::drawL(){
                 activationValues_[i] = -1;
             } 
         } 
-    }  
+    }
+    } else {
+    for (int i = 0; i < N_; i++)
+    {
+        if (i>n*n-n)
+        {
+            activationValues_[i]=-1;
+        } else {
+            if (i%n==0)
+            {
+                activationValues_[i]=-1;
+            }
+            else {
+                activationValues_[i] = 1;
+            } 
+        } 
+    }
+    }   
 }
 
 void Neurons::drawX(){
@@ -192,4 +222,62 @@ void Neurons::drawT(){
         activationValues_[i] = -1;
     }
   }
+}
+
+void Neurons::drawO(){
+    int n = std::sqrt(N_);
+    for (int i = 0; i < N_; i++)
+    {
+    int column = i%n;
+    int row = (i-column)/n;
+    if ((row == 0)||(column == 0)||(row == n-1)||(column == n-1))
+    {
+        activationValues_[i] = 1;
+    } else {
+        activationValues_[i] = -1;
+    }
+  }
+}
+
+
+void Neurons::drawZ(){
+    int n = std::sqrt(N_);
+    for (int i = 0; i < N_; i++) {
+    int column = i%n;
+    int row = (i-column)/n;
+    if ((row == 0)||(row == n-1))
+    {
+        activationValues_[i] = 1;
+    } else if (row+column==n-1){
+        activationValues_[i] = 1;
+    } else {
+        activationValues_[i] =-1;
+    }
+    
+    }
+}
+
+void Neurons::evolveRandom2(Matrix const& J){
+    int num = std::rand()%(N_);
+    for (int i = 0; i < N_; i++)
+    {
+        double res=0;
+        for (int j = 0; j < N_; j++)
+        {
+            res += J.get(num,j)*activationValues_[j];
+        }
+        activationValues_[num] = sign(res);
+    }
+}
+
+double Neurons::printEnergy(Matrix const& J){
+    double E = 0;
+    for (int i = 0; i < N_; i++)
+    {
+        for (int j = 0; j < N_; j++)
+        {
+            E -= J.get(i,j)*(this->getState(i))*(this->getState(j));
+        }
+    }
+    return E;
 }

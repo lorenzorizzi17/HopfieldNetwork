@@ -54,7 +54,7 @@ class Matrix {
         }
         void set(int i, int j, double element) 
         {
-            matrix_[i][j] = element;
+            matrix_[j][i] = element;
         }
         //size of the matrix
         int size() const {        
