@@ -7,3 +7,6 @@ build/
 CMakeSettings.json
 dump.cpp
 .out
+/vscode
+*.png
+*.jpg

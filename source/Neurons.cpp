@@ -144,7 +144,6 @@ void Neurons::evolveRandom(Matrix const& J){
         }
         activationValues_[index] = sign(res);
     }
-std::cout << v << '\n';
 }
 
 double Neurons::distance2From(Neurons const& neur){
