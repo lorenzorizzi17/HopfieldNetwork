@@ -8,7 +8,7 @@
 
 class Neurons{
     private:
-        std::vector<double> activationValues_;
+        std::vector<int> activationValues_;
         int N_;
     public:
         //standard ctor
@@ -17,16 +17,16 @@ class Neurons{
             this->randomFill(N);
         }
 
-        Neurons(std::vector<double> ActivationValues){
+        Neurons(std::vector<int> ActivationValues){
             activationValues_ = ActivationValues;
             N_ = ActivationValues.size();
         }
 
-        double getState(int) const;
+        int getState(int) const;
 
-        std::vector<double> getVector() const;
+        std::vector<int> getVector() const;
 
-        void setState(std::vector<double>);
+        void setState(std::vector<int>);
 
         void setState(int, int);
 

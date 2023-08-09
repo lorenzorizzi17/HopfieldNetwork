@@ -14,7 +14,7 @@ int main() {
     srand((unsigned) time(NULL));
 
     //graphic constants and parameters
-    const int N =32*32;     //n. of neurons (perfect square)
+    const int N =225;     //n. of neurons (perfect square)
     const int n = std::sqrt(N);
     unsigned const display_height = 0.9 * sf::VideoMode::getDesktopMode().height; //=768
     int const fps = 60;
@@ -121,7 +121,6 @@ std::cerr << corr ;
                 if(event.key.code==sf::Keyboard::Space){
                     for(int i =0; i < evoPerClick; i++){
                         initialState.evolveRandom2(J);
-                        sleep_for(milliseconds(1));
                     }
                     //compute and print energy
                     std::cout << "\nEnergy of the system is: " << initialState.printEnergy(J) << '\n';
@@ -151,13 +150,13 @@ std::cerr << corr ;
                     std::cerr << ")\n";
                 } 
                 else if (event.key.code ==sf::Keyboard::Num0){
-                    initialState.setState(houseMem32);
+                    initialState.setState(memories[0].getVector());
                 }
                 else if (event.key.code ==sf::Keyboard::Num1){
-                    initialState.setState(humansMem32);
+                    initialState.setState(memories[1].getVector());
                 }
                 else if (event.key.code ==sf::Keyboard::Num2){
-                    initialState.setState(catMem32);
+                    initialState.setState(memories[2].getVector());
                 }
                 else if (event.key.code ==sf::Keyboard::Num3){
                     initialState.setState(memories[3].getVector());

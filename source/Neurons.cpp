@@ -16,7 +16,7 @@ int sign(T a){
     {
         return 1;
     } else {
-        return -1;
+        return 0;
     }
 }
 
@@ -79,7 +79,7 @@ std::ostream& operator<<(std::ostream& os, vector<T> const& v) {
 ///////// neurons member functions ///////////
 //////////////////////////////////////////////
 
-void Neurons::setState(std::vector<double> activationValues){
+void Neurons::setState(std::vector<int> activationValues){
         //std::cout << "Warning: activation value should range from -1 to 1. Temporarily setting activationValue to 1";
         activationValues_ = activationValues;
 }
