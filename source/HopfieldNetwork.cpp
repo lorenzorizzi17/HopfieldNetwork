@@ -51,6 +51,7 @@ int main() {
     buttonRemove.setPosition(0.38*display_height,0.9*display_height);
     
     sf::Color color(157,154,183);
+    sf::Color gray(182,173,173);
     buttonMemory.setFillColor(color);
     buttonRemove.setFillColor(color);
     sf::RectangleShape buttonShuffle(sf::Vector2f(200.f, 30.f));
@@ -81,30 +82,7 @@ int main() {
     textRemoveMemory.setStyle(sf::Text::Bold);
     textRemoveMemory.setPosition(0.4*display_height,0.9*display_height);
     textRemoveMemory.setFillColor(sf::Color::Black);
-double corr = 0;
-for (int i = 0; i < N; i++)
-{
-    corr+= houseMem32[i]*catMem32[i];
-}
-std::cerr << corr << '\n';
-corr = 0;
-for (int i = 0; i < N; i++)
-{
-    corr+= houseMem32[i]*humansMem32[i];
-}
-std::cerr << corr << '\n';
-corr = 0;
-for (int i = 0; i < N; i++)
-{
-    corr+= humansMem32[i]*catMem32[i];
-}
-std::cerr << corr << '\n';
-corr = 0;
-for (int i = 0; i < N; i++)
-{
-    corr+= catMem32[i]*catMem32[i];
-}
-std::cerr << corr ;
+
 
     //graphic loop
     while (window.isOpen())
@@ -180,7 +158,7 @@ std::cerr << corr ;
                     if ((max < 0.25*display_height)){
                         int i = (x-(display_height/4))/(display_height/(2*n));
                         int j = (y-(display_height/4))/(display_height/(2*n));
-                        initialState.setState(n*j+i,initialState.getState(n*j+i)*(-1));
+                        initialState.setState(n*j+i,(((2*initialState.getState(n*j+i)-1)*(-1))+1)/2);
                     }
                     sleep_for(milliseconds(1000));
             }
@@ -194,7 +172,7 @@ std::cerr << corr ;
                     if ((max < 0.25*display_height)){
                         int i = (x-(display_height/4))/(display_height/(2*n));
                         int j = (y-(display_height/4))/(display_height/(2*n));
-                        initialState.setState(n*j+i,initialState.getState(n*j+i)*(-1));
+                        initialState.setState(n*j+i,(((2*initialState.getState(n*j+i)-1)*(-1))+1)/2);
                     }
                 }
                 
@@ -213,7 +191,7 @@ std::cerr << corr ;
                             {
                                 if (j != i)
                                 {
-                                    double coefficient = J.get(i,j)+alpha*initialState.getState(i)*initialState.getState(j);
+                                    double coefficient = J.get(i,j)+alpha*(2*initialState.getState(i)-1)*(2*initialState.getState(j)-1);
                                     J.set(i,j, coefficient);
                                 } else {
                                     J.set(i,i,0); //self interacting term
@@ -262,9 +240,9 @@ std::cerr << corr ;
             unity.setOrigin(R/2,R/2);
             unity.setPosition(0.25*display_height + (0.5+column)*L , 0.25*display_height + L*(row+0.5));
             if (initialState.getState(i)==1) {
-                unity.setFillColor(sf::Color::Blue);
-            } else if (initialState.getState(i)==-1){
-                unity.setFillColor(sf::Color::Red);
+                unity.setFillColor(sf::Color::Black);
+            } else if (initialState.getState(i)==0){
+                unity.setFillColor(gray);
             }
             window.draw(unity);
         }

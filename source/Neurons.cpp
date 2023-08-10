@@ -12,7 +12,7 @@ std::mt19937 g(rd());
 
 template <class T>
 int sign(T a){
-    if (a>=0)
+    if (a>0)
     {
         return 1;
     } else {
@@ -88,11 +88,11 @@ void Neurons::setState(int i, int a){
     activationValues_[i] = a;
 }
 
-double Neurons::getState(int i) const{
+int Neurons::getState(int i) const{
     return activationValues_[i];
 }
 
-std::vector<double> Neurons::getVector() const {
+std::vector<int> Neurons::getVector() const {
     return activationValues_;
 }
 
@@ -101,9 +101,9 @@ void Neurons::randomFill(const double N){
     {
         int rand = (std::rand())%(10);
     if (rand <5){
-        activationValues_.push_back(1.f);
+        activationValues_.push_back(1);
     } else {
-        activationValues_.push_back(-1.f);
+        activationValues_.push_back(0);
     }
     }
 }
@@ -125,7 +125,7 @@ void Neurons::evolve(Matrix const& J){
         {
             activationValues_[i] = 1;
         } else {
-            activationValues_[i] = -1;
+            activationValues_[i] = 0;
         }
     }
 }
@@ -140,7 +140,7 @@ void Neurons::evolveRandom(Matrix const& J){
         double res=0;
         for (int j = 0; j < N_; j++)
         {
-            res += J.get(index,j)*activationValues_[j];
+            res += J.get(index,j)*(double)activationValues_[j];
         }
         activationValues_[index] = sign(res);
     }
@@ -165,7 +165,7 @@ void Neurons::drawL(bool comple){
                 activationValues_[i]=1;
             }
             else {
-                activationValues_[i] = -1;
+                activationValues_[i] = 0;
             } 
         } 
     }
@@ -174,11 +174,11 @@ void Neurons::drawL(bool comple){
     {
         if (i>n*n-n)
         {
-            activationValues_[i]=-1;
+            activationValues_[i]=0;
         } else {
             if (i%n==0)
             {
-                activationValues_[i]=-1;
+                activationValues_[i]=0;
             }
             else {
                 activationValues_[i] = 1;
@@ -201,7 +201,7 @@ void Neurons::drawX(){
         } else if (row+column==n-1){
             activationValues_[i] = 1;
         } else {
-            activationValues_[i] = -1;
+            activationValues_[i] = 0;
         }
     } 
 }
@@ -218,7 +218,7 @@ void Neurons::drawT(){
     } else if (column == n/2) {
         activationValues_[i] = 1;
     } else {
-        activationValues_[i] = -1;
+        activationValues_[i] = 0;
     }
   }
 }
@@ -233,7 +233,7 @@ void Neurons::drawO(){
     {
         activationValues_[i] = 1;
     } else {
-        activationValues_[i] = -1;
+        activationValues_[i] = 0;
     }
   }
 }
@@ -250,7 +250,7 @@ void Neurons::drawZ(){
     } else if (row+column==n-1){
         activationValues_[i] = 1;
     } else {
-        activationValues_[i] =-1;
+        activationValues_[i] =0;
     }
     
     }
@@ -263,7 +263,7 @@ void Neurons::evolveRandom2(Matrix const& J){
         double res=0;
         for (int j = 0; j < N_; j++)
         {
-            res += J.get(num,j)*activationValues_[j];
+            res += J.get(num,j)*(double)activationValues_[j];
         }
         activationValues_[num] = sign(res);
     }
