@@ -280,3 +280,20 @@ double Neurons::printEnergy(Matrix const& J){
     }
     return E;
 }
+
+
+void Neurons::saveAsMemory(std::vector<Neurons>& memories, Matrix& J, double alpha) const {
+    std::cerr << "\nSaved memory!\n";
+    memories.push_back(*this);
+    for (int i = 0; i < N_; i++){
+        for (int j = 0; j < N_; j++){
+            if (j != i){
+                double coefficient = J.get(i,j)+alpha*this->getState(i)*this->getState(j);
+                J.set(i,j, coefficient);
+                } else {
+                J.set(i,i,0); //self interacting term
+                }
+            } 
+        }
+  std::cerr << "\nYou have now succesfully stored " << memories.size() << " memories\n";
+}

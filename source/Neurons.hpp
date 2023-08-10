@@ -53,6 +53,8 @@ class Neurons{
         void drawZ();
 
         double printEnergy(Matrix const&);
+
+        void saveAsMemory(std::vector<Neurons>&, Matrix&, double) const;
 };
 
 #endif
