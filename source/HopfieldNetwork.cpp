@@ -14,7 +14,7 @@ int main() {
     srand((unsigned) time(NULL));
 
     //graphic constants and parameters
-    const int N =32*32;     //n. of neurons (perfect square)
+    const int N =15*15;     //n. of neurons (perfect square)
     const int n = std::sqrt(N);
     unsigned const display_height = 0.9 * sf::VideoMode::getDesktopMode().height; //=768
     int const fps = 60;
@@ -51,6 +51,7 @@ int main() {
     buttonRemove.setPosition(0.38*display_height,0.9*display_height);
     
     sf::Color color(157,154,183);
+    sf::Color gray(182,173,173);
     buttonMemory.setFillColor(color);
     buttonRemove.setFillColor(color);
     sf::RectangleShape buttonShuffle(sf::Vector2f(200.f, 30.f));
@@ -121,7 +122,6 @@ std::cerr << corr ;
                 if(event.key.code==sf::Keyboard::Space){
                     for(int i =0; i < evoPerClick; i++){
                         initialState.evolveRandom2(J);
-                        sleep_for(milliseconds(1));
                     }
                     //compute and print energy
                     std::cout << "\nEnergy of the system is: " << initialState.printEnergy(J) << '\n';
@@ -263,9 +263,9 @@ std::cerr << corr ;
             unity.setOrigin(R/2,R/2);
             unity.setPosition(0.25*display_height + (0.5+column)*L , 0.25*display_height + L*(row+0.5));
             if (initialState.getState(i)==1) {
-                unity.setFillColor(sf::Color::Blue);
+                unity.setFillColor(sf::Color::Black);
             } else if (initialState.getState(i)==-1){
-                unity.setFillColor(sf::Color::Red);
+                unity.setFillColor(gray);
             }
             window.draw(unity);
         }
