@@ -1,6 +1,6 @@
 
 #include"Matrix.hpp"
-#include"Neurons.hpp"
+#include"HopNetwork.hpp"
 #include<vector>
 #include<algorithm>
 #include<SFML/Graphics.hpp>
@@ -11,7 +11,7 @@ int main() {
     srand((unsigned) time(NULL));
 
     //graphic constants and parameters
-    const int N =15*15;     //n. of neurons (perfect square)
+    const int N =15*15;     //n. of HopNetwork (perfect square)
     const int n = std::sqrt(N);
     unsigned const display_height = 0.9 * sf::VideoMode::getDesktopMode().height; //=768
     int const fps = 60;
@@ -22,16 +22,16 @@ int main() {
 
 
     //random creation of the initial network state
-    Neurons initialState = Neurons(N);
+    HopNetwork network = HopNetwork(N);
     
      
     //defining the memories vector (initially empty)
-    std::vector<Neurons> memories;
+    std::vector<HopNetwork> memories;
 
     //defining the synaptic matric (initially all 0s)
     Matrix J = Matrix(N,0);
     
-    //some graphic stuff (windows, buttons, neurons...)
+    //some graphic stuff (windows, buttons, HopNetwork...)
     sf::Color color(157,154,183);
     sf::Color gray(182,173,173);
 
@@ -62,7 +62,7 @@ int main() {
     textSaveMemory.setFillColor(sf::Color::Black);
     textShuffle.setFont(font);
     textShuffle.setCharacterSize(20);
-    textShuffle.setString("Shuffle neurons");
+    textShuffle.setString("Shuffle HopNetwork");
     textShuffle.setStyle(sf::Text::Bold);
     textShuffle.setPosition(0.4*display_height,0.85*display_height);
     textShuffle.setFillColor(sf::Color::Black);
@@ -87,45 +87,40 @@ int main() {
             if (event.type==sf::Event::KeyPressed){
                 if(event.key.code==sf::Keyboard::Space){
                     for(int i =0; i < evoPerClick; i++){
-                        initialState.evolveRandom2(J);
+                        network.evolveRandom2(J);
                     }
                     //compute and print energy
-                    std::cout << "\nEnergy of the system is: " << initialState.printEnergy(J) << '\n';
+                    std::cout << "\nEnergy of the system is: " << network.printEnergy(J) << '\n';
                 } else if (event.key.code==sf::Keyboard::L){
                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
                     {
-                        initialState.drawL(false);
+                        network.drawL(false);
                     } else {
-                        initialState.drawL(true);
+                        network.drawL(true);
                     }
                 } else if (event.key.code==sf::Keyboard::X){
-                    initialState.drawX();
+                    network.drawX();
                 } else if (event.key.code==sf::Keyboard::T){
-                    initialState.drawT();
+                    network.drawT();
                 } else if (event.key.code==sf::Keyboard::O){
-                    initialState.drawO();
+                    network.drawO();
                 } else if (event.key.code==sf::Keyboard::Z){
-                    initialState.drawZ();
+                    network.drawZ();
                 } 
                 else if (event.key.code==sf::Keyboard::P){
-                    std::cerr << "\nDistances are: (";
-                    for (int i = 0; i < memories.size(); i++)
-                    {
-                        std::cerr << initialState.distance2From(memories[i]) << ", ";
-                    }
-                    std::cerr << ")\n";
+                    std::cerr << "\nDistances are: (" << network.distance2From(memories) << '\n';
                 } 
                 else if (event.key.code ==sf::Keyboard::Num0){
-                    initialState.setState(memories[0].getVector());
+                    network.setState(memories[0].getVector());
                 }
                 else if (event.key.code ==sf::Keyboard::Num1){
-                    initialState.setState(memories[1].getVector());
+                    network.setState(memories[1].getVector());
                 }
                 else if (event.key.code ==sf::Keyboard::Num2){
-                    initialState.setState(memories[2].getVector());
+                    network.setState(memories[2].getVector());
                 }
                 else if (event.key.code ==sf::Keyboard::Num3){
-                    initialState.setState(memories[3].getVector());
+                    network.setState(memories[3].getVector());
                 }
                 else if (event.key.code == sf::Keyboard::C){
                     double corr = 0;
@@ -138,7 +133,7 @@ int main() {
             }
             
             if (event.type ==sf::Event::MouseButtonPressed){
-                //change the states by pressing on neurons
+                //change the states by pressing on HopNetwork
                 if (event.mouseButton.button == sf::Mouse::Right){
                     double x = event.mouseButton.x;
                     double y = event.mouseButton.y;
@@ -146,7 +141,7 @@ int main() {
                     if ((max < 0.25*display_height)){
                         int i = (x-(display_height/4))/(display_height/(2*n));
                         int j = (y-(display_height/4))/(display_height/(2*n));
-                        initialState.setState(n*j+i,initialState.getState(n*j+i)*(-1));
+                        network.setState(n*j+i,network.getState(n*j+i)*(-1));
                     }
                 }
                 
@@ -157,38 +152,31 @@ int main() {
                     //pressed save memory
                     if (((x-0.38*display_height> 0)&&(x-0.38*display_height<250.f))&&(((y-0.1*display_height> 0)&&(y-0.1*display_height<30.f))))
                     {
-                        initialState.saveAsMemory(memories, J, alpha);
+                        network.saveAsMemory(memories, J, alpha);
+                        std::cerr << "\nSaved memory!\n";
+                        std::cerr << "\nYou have now succesfully stored " << memories.size() << " memories\n";
                     }
                     //removing memories
                     if (((x-0.38*display_height> 0)&&(x-0.38*display_height<200.f))&&(((y-0.9*display_height> 0)&&(y-0.9*display_height<30.f))))
                     {
-                        for (int i = 0; i < N; i++)
-                        {
-                            for (int j = 0; j < N; j++)
-                            {
-                                J.set(i,j,0); //?
-                            }
-                        }
-                        memories.clear();
+                        network.removeMemories(memories,J);
                         std::cerr << "\nRemoving all memories\n";
                     }
                     
-                    //pressed shuffle neurons
+                    //pressed shuffle HopNetwork
                     if (((x-0.38*display_height> 0)&&(x-0.38*display_height<200.f))&&(((y-0.85*display_height> 0)&&(y-0.85*display_height<45.f))))
                     {
-                        std::cerr << "\nShuffling neurons\n";
-                        Neurons n = Neurons(N);
-                        initialState.setState(n.getVector());
-                        
+                        std::cerr << "\nShuffling HopNetwork\n";
+                        HopNetwork n = HopNetwork(N);
+                        network.setState(n.getVector());
                     }
-                    
                 }
             }
         }
 
         //drawing the necessary
         window.clear(sf::Color::White);
-        //drawing the neurons with their activation value
+        //drawing the HopNetwork with their activation value
         for (int i = 0; i < N; i++)
         {
             sf::CircleShape unity(R);
@@ -197,9 +185,9 @@ int main() {
             int row = (i-column)/n;
             unity.setOrigin(R/2,R/2);
             unity.setPosition(0.25*display_height + (0.5+column)*L , 0.25*display_height + L*(row+0.5));
-            if (initialState.getState(i)==1) {
+            if (network.getState(i)==1) {
                 unity.setFillColor(sf::Color::Black);
-            } else if (initialState.getState(i)==-1){
+            } else if (network.getState(i)==-1){
                 unity.setFillColor(gray);
             }
             window.draw(unity);

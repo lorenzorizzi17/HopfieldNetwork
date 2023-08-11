@@ -22,7 +22,7 @@ find_package(SFML 2.5 COMPONENTS graphics REQUIRED)
 
 # aggiungi l'eseguibile chain-sfml, da produrre a partire dai sorgenti indicati
 #   notare l'assenza degli header file, che pero' possono essere indicati
-add_executable(HopfieldNetwork.out HopfieldNetwork.cpp Neurons.cpp Matrix.cpp)
+add_executable(HopfieldNetwork.out main.cpp HopNetwork.cpp )
 # l'eseguibile dipende dalla libreria sfml-graphics e sue dipendenze
 target_link_libraries(HopfieldNetwork.out PRIVATE sfml-graphics)
 

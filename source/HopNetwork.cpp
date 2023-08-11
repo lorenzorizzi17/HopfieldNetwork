@@ -1,4 +1,4 @@
-#include "Neurons.hpp"
+#include "HopNetwork.hpp"
 #include<random>
 #include<iostream>
 
@@ -76,27 +76,27 @@ std::ostream& operator<<(std::ostream& os, vector<T> const& v) {
 
 
 //////////////////////////////////////////////
-///////// neurons member functions ///////////
+///////// HopNetwork member functions ///////////
 //////////////////////////////////////////////
 
-void Neurons::setState(std::vector<double> activationValues){
+void HopNetwork::setState(std::vector<double> activationValues){
         //std::cout << "Warning: activation value should range from -1 to 1. Temporarily setting activationValue to 1";
         activationValues_ = activationValues;
 }
 
-void Neurons::setState(int i, int a){
+void HopNetwork::setState(int i, int a){
     activationValues_[i] = a;
 }
 
-double Neurons::getState(int i) const{
+double HopNetwork::getState(int i) const{
     return activationValues_[i];
 }
 
-std::vector<double> Neurons::getVector() const {
+std::vector<double> HopNetwork::getVector() const {
     return activationValues_;
 }
 
-void Neurons::randomFill(const double N){
+void HopNetwork::randomFill(const double N){
     for (int i = 0; i < N; i++)
     {
         int rand = (std::rand())%(10);
@@ -108,7 +108,7 @@ void Neurons::randomFill(const double N){
     }
 }
 
-void Neurons::printStatus(){
+void HopNetwork::printStatus(){
     std::cout << "[";
     for (int i = 0; i < N_-1; i++)
     {
@@ -117,7 +117,7 @@ void Neurons::printStatus(){
     std::cout << activationValues_[N_-1] << "]\n";
 }
 
-void Neurons::evolve(Matrix const& J){
+void HopNetwork::evolve(Matrix const& J){
     auto supp = J*activationValues_;
     for (int i = 0; i < N_; i++)
     {
@@ -130,7 +130,7 @@ void Neurons::evolve(Matrix const& J){
     }
 }
 
-void Neurons::evolveRandom(Matrix const& J){
+void HopNetwork::evolveRandom(Matrix const& J){
     std::vector<int> v(N_);
     std::iota(v.begin(),v.end(), 0);
     std::shuffle(v.begin(), v.end(), g);
@@ -146,12 +146,12 @@ void Neurons::evolveRandom(Matrix const& J){
     }
 }
 
-double Neurons::distance2From(Neurons const& neur){
+double HopNetwork::distance2From(HopNetwork const& neur){
     auto a = (this->getVector())-neur.getVector();
     return norm2(a);
 }
 
-void Neurons::drawL(bool comple){
+void HopNetwork::drawL(bool comple){
     int n = std::sqrt(N_);
     if (comple){
     for (int i = 0; i < N_; i++)
@@ -188,7 +188,7 @@ void Neurons::drawL(bool comple){
     }   
 }
 
-void Neurons::drawX(){
+void HopNetwork::drawX(){
     int n = std::sqrt(N_);
     for (int i = 0; i < N_; i++)
     {
@@ -206,7 +206,7 @@ void Neurons::drawX(){
     } 
 }
 
-void Neurons::drawT(){
+void HopNetwork::drawT(){
     int n = std::sqrt(N_);
     for (int i = 0; i < N_; i++)
     {
@@ -223,7 +223,7 @@ void Neurons::drawT(){
   }
 }
 
-void Neurons::drawO(){
+void HopNetwork::drawO(){
     int n = std::sqrt(N_);
     for (int i = 0; i < N_; i++)
     {
@@ -239,7 +239,7 @@ void Neurons::drawO(){
 }
 
 
-void Neurons::drawZ(){
+void HopNetwork::drawZ(){
     int n = std::sqrt(N_);
     for (int i = 0; i < N_; i++) {
     int column = i%n;
@@ -256,7 +256,7 @@ void Neurons::drawZ(){
     }
 }
 
-void Neurons::evolveRandom2(Matrix const& J){
+void HopNetwork::evolveRandom2(Matrix const& J){
     int num = std::rand()%(N_);
     for (int i = 0; i < N_; i++)
     {
@@ -269,7 +269,7 @@ void Neurons::evolveRandom2(Matrix const& J){
     }
 }
 
-double Neurons::printEnergy(Matrix const& J){
+double HopNetwork::printEnergy(Matrix const& J){
     double E = 0;
     for (int i = 0; i < N_; i++)
     {
@@ -282,8 +282,8 @@ double Neurons::printEnergy(Matrix const& J){
 }
 
 
-void Neurons::saveAsMemory(std::vector<Neurons>& memories, Matrix& J, double alpha) const {
-    std::cerr << "\nSaved memory!\n";
+void HopNetwork::saveAsMemory(std::vector<HopNetwork>& memories, Matrix& J, double alpha) const {
+    
     memories.push_back(*this);
     for (int i = 0; i < N_; i++){
         for (int j = 0; j < N_; j++){
@@ -295,5 +295,27 @@ void Neurons::saveAsMemory(std::vector<Neurons>& memories, Matrix& J, double alp
                 }
             } 
         }
-  std::cerr << "\nYou have now succesfully stored " << memories.size() << " memories\n";
+}
+
+std::vector<double> HopNetwork::distance2From(std::vector<HopNetwork> const& memories){
+    std::vector<double> res;
+    for (int i = 0; i < memories.size(); i++)
+    {
+        res.push_back((this->distance2From(memories[i])));
+    }
+    return res;
+}
+
+std::ostream& operator<<(std::ostream& os, vector<double> const& v) {
+    for (auto it = v.begin(); it != v.end(); it++)      //stampa a schermo il vettore
+    {
+        os << *it << ", ";
+    };
+    os << ")" << '\n';
+    return os;
+}
+
+void HopNetwork::removeMemories(std::vector<HopNetwork>& memories, Matrix& J){
+    J = Matrix{N_,0};
+    memories.clear();
 }

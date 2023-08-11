@@ -1,23 +1,23 @@
-#ifndef NEURONS
-#define NEURONS
+#ifndef HOPNETWORK
+#define HOPNETWORK
 
 #include<assert.h>
 #include <vector>
 #include"Matrix.hpp"
 
 
-class Neurons{
+class HopNetwork{
     private:
         std::vector<double> activationValues_;
         int N_;
     public:
         //standard ctor
-        Neurons(const int N) {
+        HopNetwork(const int N) {
             N_ = N;
             this->randomFill(N);
         }
 
-        Neurons(std::vector<double> ActivationValues){
+        HopNetwork(std::vector<double> ActivationValues){
             activationValues_ = ActivationValues;
             N_ = ActivationValues.size();
         }
@@ -40,7 +40,9 @@ class Neurons{
 
         void evolveRandom2(Matrix const&);
 
-        double distance2From(Neurons const&);
+        double distance2From(HopNetwork const&);
+
+        std::vector<double> distance2From(std::vector<HopNetwork> const&);
 
         void drawL(bool const);
 
@@ -54,7 +56,11 @@ class Neurons{
 
         double printEnergy(Matrix const&);
 
-        void saveAsMemory(std::vector<Neurons>&, Matrix&, double) const;
+        void saveAsMemory(std::vector<HopNetwork>&, Matrix&, double) const;
+
+        void removeMemories( std::vector<HopNetwork>&, Matrix&);
 };
+
+std::ostream& operator<<(std::ostream&, vector<double> const&);
 
 #endif
