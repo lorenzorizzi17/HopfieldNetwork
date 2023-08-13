@@ -319,3 +319,20 @@ void HopNetwork::removeMemories(std::vector<HopNetwork>& memories, Matrix& J){
     J = Matrix{N_,0};
     memories.clear();
 }
+
+void HopNetwork::evolveUntilConverge(double s, Matrix const& J){
+        double E = 0;
+        int j = 0;
+        while (j<s)
+        {
+            this->evolveRandom2(J);
+            double deltaE = E - this->printEnergy(J);
+            if (deltaE < 0.01)
+            {
+                j++;
+            } else {
+                j=0;
+            }
+            E = this->printEnergy(J);
+        }
+}

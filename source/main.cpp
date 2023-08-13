@@ -109,6 +109,8 @@ int main() {
                 } 
                 else if (event.key.code==sf::Keyboard::P){
                     std::cerr << "\nDistances are: (" << network.distance2From(memories) << '\n';
+                } else if (event.key.code==sf::Keyboard::N){
+                    network.evolveUntilConverge(1000,J);
                 } 
                 else if (event.key.code ==sf::Keyboard::Num0){
                     network.setState(memories[0].getVector());

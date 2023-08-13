@@ -59,6 +59,8 @@ class HopNetwork{
         void saveAsMemory(std::vector<HopNetwork>&, Matrix&, double) const;
 
         void removeMemories( std::vector<HopNetwork>&, Matrix&);
+
+        void evolveUntilConverge(double, Matrix const& );
 };
 
 std::ostream& operator<<(std::ostream&, vector<double> const&);
