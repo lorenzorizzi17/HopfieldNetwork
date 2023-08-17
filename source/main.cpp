@@ -11,7 +11,7 @@ int main() {
     srand((unsigned) time(NULL));
 
     //graphic constants and parameters
-    const int N =15*15;     //n. of HopNetwork (perfect square)
+    const int N =10*10;     //n. of HopNetwork (perfect square)
     const int n = std::sqrt(N);
     unsigned const display_height = 0.9 * sf::VideoMode::getDesktopMode().height; //=768
     int const fps = 60;
@@ -23,13 +23,6 @@ int main() {
 
     //random creation of the initial network state
     HopNetwork network = HopNetwork(N);
-    
-     
-    //defining the memories vector (initially empty)
-    std::vector<HopNetwork> memories;
-
-    //defining the synaptic matric (initially all 0s)
-    Matrix J = Matrix(N,0);
     
     //some graphic stuff (windows, buttons, HopNetwork...)
     sf::Color color(157,154,183);
@@ -87,11 +80,11 @@ int main() {
             if (event.type==sf::Event::KeyPressed){
                 if(event.key.code==sf::Keyboard::Space){
                     for(int i =0; i < evoPerClick; i++){
-                        network.evolveRandom2(J);
+                        network.evolveRandom2();
                     }
                     //compute and print energy
-                    std::cout << "\nEnergy of the system is: " << network.printEnergy(J) << '\n';
-                } else if (event.key.code==sf::Keyboard::L){
+                    std::cout << "\nEnergy of the system is: " << network.getEnergy() << '\n';
+                } /* else if (event.key.code==sf::Keyboard::L){
                     if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
                     {
                         network.drawL(false);
@@ -106,29 +99,32 @@ int main() {
                     network.drawO();
                 } else if (event.key.code==sf::Keyboard::Z){
                     network.drawZ();
-                } 
+                }  */
                 else if (event.key.code==sf::Keyboard::P){
-                    std::cerr << "\nDistances are: (" << network.distance2From(memories) << '\n';
+                    std::cerr << "\nDistances are: (" << network.distanceFrom(network.getMemories()) << '\n';
                 } else if (event.key.code==sf::Keyboard::N){
-                    network.evolveUntilConverge(1000,J);
+                    network.evolveUntilConverge(1000);
                 } 
                 else if (event.key.code ==sf::Keyboard::Num0){
-                    network.setState(memories[0].getVector());
+                    network.setState(network.getMemory(0));
                 }
                 else if (event.key.code ==sf::Keyboard::Num1){
-                    network.setState(memories[1].getVector());
+                    network.setState(network.getMemory(1));
                 }
                 else if (event.key.code ==sf::Keyboard::Num2){
-                    network.setState(memories[2].getVector());
+                    network.setState(network.getMemory(2));
                 }
                 else if (event.key.code ==sf::Keyboard::Num3){
-                    network.setState(memories[3].getVector());
+                    network.setState(network.getMemory(3));
+                }
+                else if (event.key.code ==sf::Keyboard::R){
+                    network.randomNoise(10);
                 }
                 else if (event.key.code == sf::Keyboard::C){
                     double corr = 0;
                     for (int i = 0; i < N; i++)
                     {
-                        corr+= ((memories[0].getVector())[i])*((memories[1].getVector())[i]);
+                        corr+= (network.getMemory(1)).get(i)*((network.getMemory(2)).get(i));
                     }
                     std::cerr << "Correlation is: " << corr << '\n';
                 }
@@ -154,23 +150,22 @@ int main() {
                     //pressed save memory
                     if (((x-0.38*display_height> 0)&&(x-0.38*display_height<250.f))&&(((y-0.1*display_height> 0)&&(y-0.1*display_height<30.f))))
                     {
-                        network.saveAsMemory(memories, J, alpha);
+                        network.saveAsMemory(alpha);
                         std::cerr << "\nSaved memory!\n";
-                        std::cerr << "\nYou have now succesfully stored " << memories.size() << " memories\n";
+                        std::cerr << "\nYou have now succesfully stored " << network.getMemories().size() << " memories\n";
                     }
                     //removing memories
                     if (((x-0.38*display_height> 0)&&(x-0.38*display_height<200.f))&&(((y-0.9*display_height> 0)&&(y-0.9*display_height<30.f))))
                     {
-                        network.removeMemories(memories,J);
+                        network.removeMemories();
                         std::cerr << "\nRemoving all memories\n";
                     }
                     
                     //pressed shuffle HopNetwork
                     if (((x-0.38*display_height> 0)&&(x-0.38*display_height<200.f))&&(((y-0.85*display_height> 0)&&(y-0.85*display_height<45.f))))
                     {
-                        std::cerr << "\nShuffling HopNetwork\n";
-                        HopNetwork n = HopNetwork(N);
-                        network.setState(n.getVector());
+                        std::cerr << "\nShuffling neurons\n";
+                        network.randomShuffle(N);
                     }
                 }
             }

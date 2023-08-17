@@ -4,47 +4,47 @@
 #include<assert.h>
 #include <vector>
 #include"Matrix.hpp"
-
+#include"state.hpp"
 
 class HopNetwork{
     private:
-        std::vector<double> activationValues_;
+        State activationValues_;
         int N_;
+        std::vector<State> storedMemories_;
+        Matrix J_;
     public:
         //standard ctor
-        HopNetwork(const int N) {
+        HopNetwork(const int N): activationValues_{State(N)}, J_{Matrix(N,0)} {
             N_ = N;
-            this->randomFill(N);
         }
 
-        HopNetwork(std::vector<double> ActivationValues){
-            activationValues_ = ActivationValues;
-            N_ = ActivationValues.size();
-        }
+        int getState(int) const;
 
-        double getState(int) const;
+        State getVector() const;
 
-        std::vector<double> getVector() const;
-
-        void setState(std::vector<double>);
+        void setState(State);
 
         void setState(int, int);
 
-        void randomFill(const double);
+        Matrix& getMatrix();
 
-        void printStatus();
-        
-        void evolve(Matrix const&);
+        State getMemory(int) const;
 
-        void evolveRandom(Matrix const&);
+        std::vector<State> getMemories() const;
 
-        void evolveRandom2(Matrix const&);
+        void randomShuffle(const double);
 
-        double distance2From(HopNetwork const&);
+        void evolveRandom();
 
-        std::vector<double> distance2From(std::vector<HopNetwork> const&);
+        void evolveRandom2();
 
-        void drawL(bool const);
+        double getEnergy();
+
+        double distanceFrom(State const&);
+
+        std::vector<double> distanceFrom(std::vector<State> const&);
+
+        /* void drawL(bool const);
 
         void drawX();
 
@@ -52,16 +52,17 @@ class HopNetwork{
 
         void drawO();
 
-        void drawZ();
+        void drawZ(); */
 
-        double printEnergy(Matrix const&);
+        void saveAsMemory(double);
 
-        void saveAsMemory(std::vector<HopNetwork>&, Matrix&, double) const;
+        void removeMemories();
 
-        void removeMemories( std::vector<HopNetwork>&, Matrix&);
+        void evolveUntilConverge(double);
 
-        void evolveUntilConverge(double, Matrix const& );
+        void randomNoise(int);
 };
+
 
 std::ostream& operator<<(std::ostream&, vector<double> const&);
 

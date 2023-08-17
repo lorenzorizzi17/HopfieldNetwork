@@ -5,7 +5,7 @@
 
 void HopfieldROOT() {
 
-    int p = 4;
+    int p = 5;
     gROOT->SetStyle("Plain");
     gStyle->SetPalette(57);
     gStyle->SetOptTitle(0);

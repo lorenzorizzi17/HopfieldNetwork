@@ -52,20 +52,19 @@ vector<T> operator-(vector<T> v1, vector<T> v2) {
      return result;
 }
 
-//quadratic norm
+//absolute norm
 template <class T>
-double norm2(vector<T> const v) { 
+double norm(vector<T> const v) { 
     double ris = 0;
     for (auto it = v.begin(); it != v.end(); it++)
     {
-        ris += (*it)*(*it);
+        ris += std::abs(*it);
     }
-    return sqrt(ris);
+    return (ris);
 }
 
-//send to ostream a vector
-template <class T> 
-std::ostream& operator<<(std::ostream& os, vector<T> const& v) {
+//send to ostream a vector 
+std::ostream& operator<<(std::ostream& os, vector<double> const& v) {
     for (auto it = v.begin(); it != v.end(); it++)   
     {
         os << *it << ", ";
@@ -74,63 +73,52 @@ std::ostream& operator<<(std::ostream& os, vector<T> const& v) {
     return os;
 }
 
-
 //////////////////////////////////////////////
 ///////// HopNetwork member functions ///////////
 //////////////////////////////////////////////
 
-void HopNetwork::setState(std::vector<double> activationValues){
+int HopNetwork::getState(int i) const{
+    return activationValues_.get(i);
+}
+
+State HopNetwork::getVector() const {
+    return activationValues_;
+}
+
+
+void HopNetwork::setState(State activationValues){
         //std::cout << "Warning: activation value should range from -1 to 1. Temporarily setting activationValue to 1";
         activationValues_ = activationValues;
 }
 
 void HopNetwork::setState(int i, int a){
-    activationValues_[i] = a;
+    activationValues_.set(i,a);
 }
 
-double HopNetwork::getState(int i) const{
-    return activationValues_[i];
+Matrix& HopNetwork::getMatrix(){
+    return J_;
 }
 
-std::vector<double> HopNetwork::getVector() const {
-    return activationValues_;
-}
-
-void HopNetwork::randomFill(const double N){
-    for (int i = 0; i < N; i++)
+State HopNetwork::getMemory(int n) const {
+    if (n < storedMemories_.size())
     {
-        int rand = (std::rand())%(10);
-    if (rand <5){
-        activationValues_.push_back(1.f);
+        return storedMemories_[n];
     } else {
-        activationValues_.push_back(-1.f);
-    }
-    }
-}
-
-void HopNetwork::printStatus(){
-    std::cout << "[";
-    for (int i = 0; i < N_-1; i++)
-    {
-        std::cout<< activationValues_[i] << ", ";
-    }
-    std::cout << activationValues_[N_-1] << "]\n";
-}
-
-void HopNetwork::evolve(Matrix const& J){
-    auto supp = J*activationValues_;
-    for (int i = 0; i < N_; i++)
-    {
-        if (supp[i] >= 0)
-        {
-            activationValues_[i] = 1;
-        } else {
-            activationValues_[i] = -1;
-        }
+        std::cout << "No such memory exist";
     }
 }
 
-void HopNetwork::evolveRandom(Matrix const& J){
+std::vector<State> HopNetwork::getMemories() const{
+    return storedMemories_;
+}
+
+void HopNetwork::randomShuffle(const double N){
+    State a = State(N);
+    activationValues_= a;
+}
+
+
+void HopNetwork::evolveRandom(){
     std::vector<int> v(N_);
     std::iota(v.begin(),v.end(), 0);
     std::shuffle(v.begin(), v.end(), g);
@@ -140,18 +128,52 @@ void HopNetwork::evolveRandom(Matrix const& J){
         double res=0;
         for (int j = 0; j < N_; j++)
         {
-            res += J.get(index,j)*activationValues_[j];
+            res += J_.get(index,j)*activationValues_.get(j);
         }
-        activationValues_[index] = sign(res);
+        activationValues_.set(index,sign(res));
     }
 }
 
-double HopNetwork::distance2From(HopNetwork const& neur){
-    auto a = (this->getVector())-neur.getVector();
-    return norm2(a);
+void HopNetwork::evolveRandom2(){
+    int num = std::rand()%(N_);
+    for (int i = 0; i < N_; i++)
+    {
+        double res=0;
+        for (int j = 0; j < N_; j++)
+        {
+            res += J_.get(num,j)*activationValues_.get(j);
+        }
+        activationValues_.set(num,sign(res));
+    }
 }
 
-void HopNetwork::drawL(bool comple){
+double HopNetwork::getEnergy(){
+    double E = 0;
+    for (int i = 0; i < N_; i++)
+    {
+        for (int j = 0; j < N_; j++)
+        {
+            E -= J_.get(i,j)*(this->getState(i))*(this->getState(j));
+        }
+    }
+    return E;
+}
+
+double HopNetwork::distanceFrom(State const& neur){
+    auto a = (this->getVector()).getVector() - neur.getVector();
+    return norm(a);
+}
+
+std::vector<double> HopNetwork::distanceFrom(std::vector<State> const& memories){
+    std::vector<double> res;
+    for (int i = 0; i < memories.size(); i++)
+    {
+        res.push_back((this->distanceFrom(memories[i])));
+    }
+    return res;
+}
+
+/* void HopNetwork::drawL(bool comple){
     int n = std::sqrt(N_);
     if (comple){
     for (int i = 0; i < N_; i++)
@@ -254,85 +276,54 @@ void HopNetwork::drawZ(){
     }
     
     }
-}
-
-void HopNetwork::evolveRandom2(Matrix const& J){
-    int num = std::rand()%(N_);
-    for (int i = 0; i < N_; i++)
-    {
-        double res=0;
-        for (int j = 0; j < N_; j++)
-        {
-            res += J.get(num,j)*activationValues_[j];
-        }
-        activationValues_[num] = sign(res);
-    }
-}
-
-double HopNetwork::printEnergy(Matrix const& J){
-    double E = 0;
-    for (int i = 0; i < N_; i++)
-    {
-        for (int j = 0; j < N_; j++)
-        {
-            E -= J.get(i,j)*(this->getState(i))*(this->getState(j));
-        }
-    }
-    return E;
-}
+} */
 
 
-void HopNetwork::saveAsMemory(std::vector<HopNetwork>& memories, Matrix& J, double alpha) const {
-    
-    memories.push_back(*this);
+
+
+void HopNetwork::saveAsMemory(double alpha)  {
+    storedMemories_.push_back(activationValues_);
     for (int i = 0; i < N_; i++){
         for (int j = 0; j < N_; j++){
             if (j != i){
-                double coefficient = J.get(i,j)+alpha*this->getState(i)*this->getState(j);
-                J.set(i,j, coefficient);
+                double coefficient = J_.get(i,j)+alpha*this->getState(i)*this->getState(j);
+                J_.set(i,j, coefficient);
                 } else {
-                J.set(i,i,0); //self interacting term
+                J_.set(i,i,0); //self interacting term
                 }
             } 
         }
 }
 
-std::vector<double> HopNetwork::distance2From(std::vector<HopNetwork> const& memories){
-    std::vector<double> res;
-    for (int i = 0; i < memories.size(); i++)
-    {
-        res.push_back((this->distance2From(memories[i])));
-    }
-    return res;
+
+
+void HopNetwork::removeMemories(){
+    J_ = Matrix{N_,0};
+    storedMemories_.clear();
 }
 
-std::ostream& operator<<(std::ostream& os, vector<double> const& v) {
-    for (auto it = v.begin(); it != v.end(); it++)      //stampa a schermo il vettore
-    {
-        os << *it << ", ";
-    };
-    os << ")" << '\n';
-    return os;
-}
-
-void HopNetwork::removeMemories(std::vector<HopNetwork>& memories, Matrix& J){
-    J = Matrix{N_,0};
-    memories.clear();
-}
-
-void HopNetwork::evolveUntilConverge(double s, Matrix const& J){
+void HopNetwork::evolveUntilConverge(double s){
         double E = 0;
         int j = 0;
         while (j<s)
         {
-            this->evolveRandom2(J);
-            double deltaE = E - this->printEnergy(J);
+            this->evolveRandom2();
+            double deltaE = E - this->getEnergy();
             if (deltaE < 0.01)
             {
                 j++;
             } else {
                 j=0;
             }
-            E = this->printEnergy(J);
+            E = this->getEnergy();
         }
+}
+
+void HopNetwork::randomNoise(int n){
+    for (int i = 0; i < n; i++)
+    {
+        int a = std::rand()%N_;
+        this->setState(a,this->getState(a)*(-1));
+    }
+    
 }
