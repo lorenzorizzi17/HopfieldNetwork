@@ -54,12 +54,42 @@ class Matrix {
         }
         void set(int i, int j, double element) 
         {
-            matrix_[j][i] = element;
+            matrix_[i][j] = element;
         }
         //size of the matrix
         int size() const {        
             return matrix_.size();
         } 
+
+        double getMax() const {
+            std::vector<double> v;
+            int N = matrix_.size();
+            for (int i = 0; i < N ; i++)
+            {
+                for (int j = 0; j < N; j++)
+                {
+                    if(std::abs(this->get(i,j)-1)>0.01){
+                        v.push_back(this->get(i,j));
+                    }
+                }
+            }
+            return *std::max_element(v.begin(),v.end());
+        }
+
+        double getMin() const {
+            std::vector<double> v;
+            int N = matrix_.size();
+            for (int i = 0; i < N ; i++)
+            {
+                for (int j = 0; j < N; j++)
+                {
+                    if(std::abs(this->get(i,j)-1)>0.01){
+                        v.push_back(this->get(i,j));
+                    }
+                }
+            }
+            return *std::min_element(v.begin(),v.end());
+        }
 }; 
 
 

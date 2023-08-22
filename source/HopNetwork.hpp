@@ -44,7 +44,7 @@ class HopNetwork{
 
         std::vector<double> distanceFrom(std::vector<State> const&);
 
-        /* void drawL(bool const);
+        void drawL(bool const);
 
         void drawX();
 
@@ -52,7 +52,7 @@ class HopNetwork{
 
         void drawO();
 
-        void drawZ(); */
+        void drawZ();
 
         void saveAsMemory(double);
 
@@ -61,6 +61,10 @@ class HopNetwork{
         void evolveUntilConverge(double);
 
         void randomNoise(int);
+
+        Matrix getCorrelationMatrix() const;
+
+        void randomNoiseOnMatrix(int, double);
 };
 
 

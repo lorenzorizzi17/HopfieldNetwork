@@ -29,6 +29,8 @@ int main() {
 
     sf::RenderWindow window(sf::VideoMode(display_height, display_height), "Hopfield Network", sf::Style::Default);
     window.setFramerateLimit(fps);
+    sf::RenderWindow windowMatrix(sf::VideoMode(0.5*display_height, 0.5*display_height), "Hopfield Network", sf::Style::Default);
+    windowMatrix.setFramerateLimit(fps);
 
     sf::RectangleShape buttonMemory(sf::Vector2f(250.f, 55.f)); 
     buttonMemory.setPosition(0.38*display_height,0.1*display_height);
@@ -41,7 +43,7 @@ int main() {
     buttonShuffle.setFillColor(color);
 
     sf::Font font;
-    if (!font.loadFromFile("graphics/font.ttf")){
+    if (!font.loadFromFile("../graphics/font.ttf")){
         std::cerr << "Errore nel caricamento del font";
     }
     sf::Text textSaveMemory;
@@ -69,7 +71,7 @@ int main() {
     
 
     //graphic loop
-    while (window.isOpen())
+    while (window.isOpen() && windowMatrix.isOpen())
     {
         //handling the events
         sf::Event event;
@@ -77,6 +79,7 @@ int main() {
         {
             if (event.type == sf::Event::Closed){
                 window.close();
+                windowMatrix.close();
             }
             //evolve
             if (event.type==sf::Event::KeyPressed){
@@ -124,6 +127,9 @@ int main() {
                 }
                 else if (event.key.code == sf::Keyboard::C){
                     network.getCorrelationMatrix().print();
+                } else if (event.key.code == sf::Keyboard::J){
+                    network.randomNoiseOnMatrix(10,0);
+std::cerr << "Random noise on matrix";
                 }
             }
             
@@ -170,6 +176,7 @@ int main() {
 
         //drawing the necessary
         window.clear(sf::Color::White);
+        windowMatrix.clear(sf::Color::White);
         //drawing the HopNetwork with their activation value
         for (int i = 0; i < N; i++)
         {
@@ -184,6 +191,17 @@ int main() {
             } else if (network.getState(i)==-1){
                 unity.setFillColor(gray);
             }
+            for (int j = 0; j < N; j++)
+            {
+            double dotsize = 2*display_height/N;
+            sf::RectangleShape dots = sf::RectangleShape(sf::Vector2f(dotsize,dotsize));
+            int intensity = N * network.getMatrix().get(i,j);
+            sf::Color colorInt = sf::Color(102,255,50+60*intensity);
+            dots.setFillColor(colorInt);
+            dots.setOrigin(0.5*dotsize,0.5*dotsize);
+            dots.setPosition(i*dotsize/2, j*dotsize/2);
+            windowMatrix.draw(dots);
+            }
             window.draw(unity);
         }
         
@@ -196,6 +214,7 @@ int main() {
         window.draw(textRemoveMemory);
         
         window.display();
+        windowMatrix.display();
     }
     
 }

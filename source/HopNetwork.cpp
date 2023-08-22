@@ -173,21 +173,21 @@ std::vector<double> HopNetwork::distanceFrom(std::vector<State> const& memories)
     return res;
 }
 
-/* void HopNetwork::drawL(bool comple){
+void HopNetwork::drawL(bool comple){
     int n = std::sqrt(N_);
     if (comple){
     for (int i = 0; i < N_; i++)
     {
         if (i>n*n-n)
         {
-            activationValues_[i]=1;
+            activationValues_.set(i,1);
         } else {
             if (i%n==0)
             {
-                activationValues_[i]=1;
+                activationValues_.set(i,1);
             }
             else {
-                activationValues_[i] = -1;
+                activationValues_.set(i,-1);
             } 
         } 
     }
@@ -196,14 +196,14 @@ std::vector<double> HopNetwork::distanceFrom(std::vector<State> const& memories)
     {
         if (i>n*n-n)
         {
-            activationValues_[i]=-1;
+            activationValues_.set(i,-1);
         } else {
             if (i%n==0)
             {
-                activationValues_[i]=-1;
+                activationValues_.set(i,-1);
             }
             else {
-                activationValues_[i] = 1;
+                activationValues_.set(i,1);
             } 
         } 
     }
@@ -219,11 +219,11 @@ void HopNetwork::drawX(){
     int row = (i-column)/n;
         if (row==column)
         {
-            activationValues_[i] = 1;
+            activationValues_.set(i,1);
         } else if (row+column==n-1){
-            activationValues_[i] = 1;
+            activationValues_.set(i,1);
         } else {
-            activationValues_[i] = -1;
+            activationValues_.set(i,-1);
         }
     } 
 }
@@ -236,11 +236,11 @@ void HopNetwork::drawT(){
     int row = (i-column)/n;
     if (row == 0)
     {
-        activationValues_[i] = 1;
+        activationValues_.set(i,1);
     } else if (column == n/2) {
-        activationValues_[i] = 1;
+        activationValues_.set(i,1);
     } else {
-        activationValues_[i] = -1;
+        activationValues_.set(i,-1);
     }
   }
 }
@@ -253,9 +253,9 @@ void HopNetwork::drawO(){
     int row = (i-column)/n;
     if ((row == 0)||(column == 0)||(row == n-1)||(column == n-1))
     {
-        activationValues_[i] = 1;
+        activationValues_.set(i,1);
     } else {
-        activationValues_[i] = -1;
+        activationValues_.set(i,-1);
     }
   }
 }
@@ -268,15 +268,15 @@ void HopNetwork::drawZ(){
     int row = (i-column)/n;
     if ((row == 0)||(row == n-1))
     {
-        activationValues_[i] = 1;
+        activationValues_.set(i,1);
     } else if (row+column==n-1){
-        activationValues_[i] = 1;
+        activationValues_.set(i,1);
     } else {
-        activationValues_[i] =-1;
+        activationValues_.set(i,-1);
     }
     
     }
-} */
+}
 
 
 
@@ -325,5 +325,35 @@ void HopNetwork::randomNoise(int n){
         int a = std::rand()%N_;
         this->setState(a,this->getState(a)*(-1));
     }
-    
+}
+
+Matrix HopNetwork::getCorrelationMatrix() const {
+    int size = storedMemories_.size();
+    Matrix M = Matrix{size,0};
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = 0; j < size; j++)
+        {
+            double res = 0;
+            for (int k =0;k< N_;k++)
+            {
+              res += (1/(double)N_)*storedMemories_[i].get(k)*storedMemories_[j].get(k) ;
+            }
+            M.set(i,j,res);
+        }   
+    }
+    return M;
+}
+
+void HopNetwork::randomNoiseOnMatrix(int n, double value){
+    for (int k = 0; k < n; k++)
+    {
+        int i = std::rand()%(N_);
+        int j = std::rand()%(N_);
+        while(std::abs(J_.get(i,j)-value)<0.01){
+            i = std::rand()%(N_);
+            j = std::rand()%(N_);
+        }
+        J_.set(i,j,value);
+    } 
 }

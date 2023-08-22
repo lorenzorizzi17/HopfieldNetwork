@@ -8,12 +8,12 @@
 
 
 
-int main(){
+int main(int argc, char** argv){
     //setting random seed
     srand((unsigned) time(NULL));
 
     //Parameters of the simulation
-    const int N =100;
+    const int N = 100;
     double alpha = (double) 1/N;     //hebbian factor 
 
     //random creation of the initial network state
@@ -23,12 +23,14 @@ int main(){
     std::ofstream fileTest2;
     std::ofstream fileTest3;
     
-    int test=3;
+    std::string test= argv[1];
+    double a = stod(argv[2]);
+
     /* std::cout << "\nInsert test code: ";
     std::cin >> test; */
     //Running simulation number 1: given n random memories, we will test whether random initial state of the netwok
     //will converge to real memories or to fictitious memories we didn't explicitly stored
-    if (test==1)
+    if (test=="1")
     {
         std::cout << "\nStoring p random memories and studying the convergence of random initial state...\n";
         
@@ -72,7 +74,7 @@ int main(){
         fileTest1.close();
 
 
-    } else if (test==2){
+    } else if (test=="2"){
 
         /* HopNetwork network = HopNetwork(N);
         std::vector<std::vector<double>> memories;
@@ -100,20 +102,30 @@ int main(){
         } */
 
 
-    } else if (test ==3){
-        std::cout << "\nStudying the stability of p random stored memories adding a little random noise...\n";
-        fileTest3.open("/home/lorenzo17/HopfieldNetwork/data/test3.txt");
-        int p = 15; //number of memories to be stored
+    } else if (test =="3"){
+        
+        fileTest3.open("/home/lorenzo17/HopfieldNetwork/data/test3.txt", std::ios::app);
+        int p = 12; //number of memories to be stored
         int N_cycles = 200;  //number of cycles to perform 
-        int nRandomNoise = 0.1*N; //number of bit to modify from saved memory
+        int nRandomNoise = a*N; //number of bit to modify from saved memory
 
-        //creating p random memories
-        for (int i = 0; i < p; i++)
+        std::cout << "\nStudying the stability of p random stored memories adding a little random noise (altering " << nRandomNoise <<" bits)...\n";
+        
+        //creating p random memories with low correlation
+        double max{1};
+        double min{-1};
+        while (max>0.15 && min<-0.15)
         {
-            network.randomShuffle(N);
-            network.saveAsMemory(alpha);
+            network.removeMemories();
+            for (int i = 0; i < p; i++)
+            {
+                network.randomShuffle(N);
+                network.saveAsMemory(alpha);
+            }
+            max = network.getCorrelationMatrix().getMax();
+            min = network.getCorrelationMatrix().getMin();
         }
-
+        
         int counter = 0;
         for (int i = 0; i < N_cycles; i++)
         {   
@@ -131,5 +143,6 @@ int main(){
         }
         std::cerr << "Number of non-zero: " << (double)counter/(double)N_cycles;
         fileTest3 << (double)counter/(double)N_cycles << std::endl;
+        fileTest3.close();
     }
 }
