@@ -99,6 +99,10 @@ Matrix& HopNetwork::getMatrix(){
     return J_;
 }
 
+void HopNetwork::setMatrix(Matrix const& J){
+    J_ = J;
+}
+
 State HopNetwork::getMemory(int n) const {
     if (n < storedMemories_.size())
     {
@@ -350,10 +354,6 @@ void HopNetwork::randomNoiseOnMatrix(int n, double value){
     {
         int i = std::rand()%(N_);
         int j = std::rand()%(N_);
-        while(std::abs(J_.get(i,j)-value)<0.01){
-            i = std::rand()%(N_);
-            j = std::rand()%(N_);
-        }
-        J_.set(i,j,value);
+        J_.set(i,j,0);
     } 
 }

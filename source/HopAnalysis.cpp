@@ -3,10 +3,13 @@
 #include<vector>
 #include<algorithm>
 #include<iostream>
-#include <iostream>
 #include <fstream>
 
-
+////////////////////////////////////////////////////////////////////////////////////////
+// This code file is used to test some properties of the Hop Network. Once compiled,  //
+// the user can pass an integer value to the main function depending on the test he   //
+// wants to execute (possible values: 1-2-3-4)                                        //
+////////////////////////////////////////////////////////////////////////////////////////
 
 int main(int argc, char** argv){
     //setting random seed
@@ -19,24 +22,25 @@ int main(int argc, char** argv){
     //random creation of the initial network state
     HopNetwork network = HopNetwork(N);
 
+    //handling the io files
     std::ofstream fileTest1;
     std::ofstream fileTest2;
     std::ofstream fileTest3;
+    std::ofstream fileTest4;
     
-    std::string test= argv[1];
-    double a = stod(argv[2]);
+    std::string test = argv[1];
+    double a = stod(argv[argc-1]);
 
-    /* std::cout << "\nInsert test code: ";
-    std::cin >> test; */
-    //Running simulation number 1: given n random memories, we will test whether random initial state of the netwok
-    //will converge to real memories or to fictitious memories we didn't explicitly stored
+    
     if (test=="1")
     {
-        std::cout << "\nStoring p random memories and studying the convergence of random initial state...\n";
-        
+        //Running simulation number 1: given n random memories, we will test whether random initial state of the netwok
+        //will converge to real memories or to fictitious memories we didn't explicitly stored
+
         int p = 5; //number of memories to be stored
         int N_cycles = 500;  //number of cycles to perform 
-
+        std::cout << "\nStoring p random memories and studying the convergence of random initial state...\n";
+        
         std::string name = "/home/lorenzo17/HopfieldNetwork/data/test1_" +  to_string(N) +"_"+to_string(p)+ ".txt";
         fileTest1.open(name);
         
@@ -49,8 +53,8 @@ int main(int argc, char** argv){
 
         for (int i = 0; i < N_cycles; i++)
         {
-            network.randomShuffle(N); //random setting the initial state
-            network.evolveUntilConverge(1000); 
+            network.randomShuffle(N);     //random setting the initial state
+            network.evolveUntilConverge(1000); //let the system evolve until strong convergence
             //computing the distance of the converged state from the memories and printing it onto the file .txt
             std::vector<double> distanceFromMemories;
             for (int k = 0; k < p; k++)
@@ -76,19 +80,18 @@ int main(int argc, char** argv){
 
     } else if (test=="2"){
 
-        /* HopNetwork network = HopNetwork(N);
-        std::vector<std::vector<double>> memories;
+        //Running simulation n.2: we will be testing the stability of the p stored memories
 
         std::cout << "\nStudying the stability of p random stored memories...\n";
         fileTest2.open("/home/lorenzo17/HopfieldNetwork/data/test2.txt");
         int p = 10; //number of memories to be stored
-        int N_cycles = 100;  //number of cycles to perform 
+        int N_cycles = 500;  //number of cycles to perform 
 
-        //creating n random memories
+        //creating p random memories
         for (int i = 0; i < p; i++)
         {
-            HopNetwork memory = HopNetwork(N);
-            memory.saveAsMemory(memories,alpha);
+            network.randomShuffle(N);
+            network.saveAsMemory(alpha);
         }
 
 
@@ -96,53 +99,75 @@ int main(int argc, char** argv){
         {
             //setting the initial state equal to one of the memories
             int n = rand()%p;
-            HopNetwork network = memories[n];
-            network.evolveUntilConverge(600);
-            std::cerr << network.distanceFrom(memories[n]);  //this should be 0 or 30 if the stabilty is assured
-        } */
+            network.setState(network.getMemory(n));
+            network.evolveUntilConverge(1000);
+            std::cerr << network.distanceFrom(network.getMemory(n));  //this should be 0 if the stabilty is assured
+        }
 
 
     } else if (test =="3"){
-        
+        //Running test number 3. We will study the stability of memory to which random noise has been added and its 
+        //capability to retrieve the initial memory
         fileTest3.open("/home/lorenzo17/HopfieldNetwork/data/test3.txt", std::ios::app);
-        int p = 12; //number of memories to be stored
+
+        int p = 13; //number of memories to be stored
         int N_cycles = 200;  //number of cycles to perform 
         int nRandomNoise = a*N; //number of bit to modify from saved memory
 
         std::cout << "\nStudying the stability of p random stored memories adding a little random noise (altering " << nRandomNoise <<" bits)...\n";
         
-        //creating p random memories with low correlation
-        double max{1};
-        double min{-1};
-        while (max>0.15 && min<-0.15)
+        //creating p random memories
+        for (int i = 0; i < p; i++)
         {
-            network.removeMemories();
-            for (int i = 0; i < p; i++)
-            {
-                network.randomShuffle(N);
-                network.saveAsMemory(alpha);
-            }
-            max = network.getCorrelationMatrix().getMax();
-            min = network.getCorrelationMatrix().getMin();
+            network.randomShuffle(N);
+            network.saveAsMemory(alpha);
         }
         
         int counter = 0;
         for (int i = 0; i < N_cycles; i++)
         {   
-            
             int n = rand()%p;
             network.setState(network.getMemory(n));   //starting from a known memory that has been saved
             network.randomNoise(nRandomNoise);  //adding some noise to the memory 
-            network.evolveUntilConverge(1000);
+            network.evolveUntilConverge(1000);  //let the system evolve untile convergence
             int dist = network.distanceFrom(network.getMemory(n));
-            //std::cerr << dist << '\n';
-            if (dist!=0)
-            {
-                counter++;
-            }
+            if (dist!=0){counter++;}
         }
         std::cerr << "Number of non-zero: " << (double)counter/(double)N_cycles;
         fileTest3 << (double)counter/(double)N_cycles << std::endl;
         fileTest3.close();
+    } else if (test == "4"){
+        
+        fileTest4.open("/home/lorenzo17/HopfieldNetwork/data/test4.txt", std::ios::app);
+        int p = 10; //number of memories to be stored
+        int N_cycles = 100;  //number of cycles to perform 
+        int nRandomNoise = a*N; //number of bit to modify from saved memory
+
+        std::cout << "\nStudying the stability of p random stored memories adding a little random noise (altering " << nRandomNoise <<" bits)...\n";
+        
+        //creating p random memories with low correlation
+        for (int i = 0; i < p; i++)
+        {
+            network.randomShuffle(N);
+            network.saveAsMemory(alpha);
+        }
+
+        Matrix J = network.getMatrix();
+        int counter = 0;
+        for (int i = 0; i < N_cycles; i++)
+        {   
+            network.setMatrix(J);
+            int n = rand()%p;
+            network.setState(network.getMemory(n));   //starting from a known memory that has been saved
+            network.randomNoise(nRandomNoise);  //adding some noise to the memory 
+            network.randomNoiseOnMatrix(20*N,0);
+            network.evolveUntilConverge(1000);
+            int dist = network.distanceFrom(network.getMemory(n));
+            //std::cerr << dist << '\n';
+            if (dist!=0){counter++;}
+        }
+        std::cerr << "Number of non-zero: " << (double)counter/(double)N_cycles;
+        fileTest4 << (double)counter/(double)N_cycles << std::endl;
+        fileTest4.close();
     }
 }

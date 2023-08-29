@@ -108,16 +108,34 @@ int main() {
                     network.evolveUntilConverge(1000);
                 } 
                 else if (event.key.code ==sf::Keyboard::Num0){
-                    network.setState(network.getMemory(0));
+                    if (network.getMemories().size() > 0){network.setState(network.getMemory(0));}
                 }
                 else if (event.key.code ==sf::Keyboard::Num1){
-                    network.setState(network.getMemory(1));
+                    if (network.getMemories().size() >= 1){network.setState(network.getMemory(1));}
                 }
-                else if (event.key.code ==sf::Keyboard::Num2){
-                    network.setState(network.getMemory(2));
+                else if (event.key.code == sf::Keyboard::Num2){
+                    if (network.getMemories().size() >= 2){network.setState(network.getMemory(2));}
                 }
                 else if (event.key.code ==sf::Keyboard::Num3){
-                    network.setState(network.getMemory(3));
+                    if (network.getMemories().size() >= 3){network.setState(network.getMemory(3));}
+                }
+                else if (event.key.code ==sf::Keyboard::Num4){
+                    if (network.getMemories().size() >= 4){network.setState(network.getMemory(4));}
+                }
+                else if (event.key.code ==sf::Keyboard::Num5){
+                    if (network.getMemories().size() >= 5){network.setState(network.getMemory(5));}
+                }
+                else if (event.key.code ==sf::Keyboard::Num6){
+                    if (network.getMemories().size() >= 6){network.setState(network.getMemory(6));}
+                }
+                else if (event.key.code ==sf::Keyboard::Num7){
+                    if (network.getMemories().size() >= 7){network.setState(network.getMemory(7));}
+                }
+                else if (event.key.code ==sf::Keyboard::Num8){
+                    if (network.getMemories().size() >= 8){network.setState(network.getMemory(8));}
+                }
+                else if (event.key.code ==sf::Keyboard::Num9){
+                    if (network.getMemories().size() >= 9){network.setState(network.getMemory(9));}
                 }
                 else if (event.key.code ==sf::Keyboard::R){
                     network.randomNoise(10);

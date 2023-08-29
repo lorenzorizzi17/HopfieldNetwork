@@ -28,6 +28,8 @@ class HopNetwork{
 
         Matrix& getMatrix();
 
+        void setMatrix(Matrix const&);
+
         State getMemory(int) const;
 
         std::vector<State> getMemories() const;
