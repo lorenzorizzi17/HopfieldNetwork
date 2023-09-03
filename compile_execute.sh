@@ -3,8 +3,6 @@
 #!/bin/bash
 
 
-cmake -S ./source -B ./build
-cd build
-make
-cd ..
-sudo ./build/HopfieldNetwork.out
+cmake -S ./source -B ./build -DBUILD_TESTING=ON
+cmake --build build
+sudo build/HopfieldNetwork.out

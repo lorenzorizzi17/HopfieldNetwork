@@ -20,20 +20,20 @@ string(APPEND CMAKE_EXE_LINKER_FLAGS_DEBUG " -fsanitize=address -fno-omit-frame-
 #   le dipendenze vengono identificate automaticamente
 find_package(SFML 2.5 COMPONENTS graphics REQUIRED)
 
-# aggiungi l'eseguibile chain-sfml, da produrre a partire dai sorgenti indicati
-#   notare l'assenza degli header file, che pero' possono essere indicati
+# aggiungi l'eseguibile, da produrre a partire dai sorgenti indicati
+#  notare l'assenza degli header file, che pero' possono essere indicati
 add_executable(HopfieldNetwork.out main.cpp HopNetwork.cpp state.cpp )
 # l'eseguibile dipende dalla libreria sfml-graphics e sue dipendenze
 target_link_libraries(HopfieldNetwork.out PRIVATE sfml-graphics)
 
 # se il testing e' abilitato...
 #   per disabilitare il testing, passare -DBUILD_TESTING=OFF a cmake durante la fase di configurazione
-#if (BUILD_TESTING)
+if (BUILD_TESTING)
 
   # aggiungi l'eseguibile chain.t, da produrre a partire dai sorgenti indicati
-  #add_executable(chain.t chain.test.cpp chain.cpp ppstate.cpp)
-  #target_link_libraries(chain.t PRIVATE sfml-graphics)
-  # aggiungi l'eseguibile chain.t alla lista dei test, con nome chain.t
-  #add_test(NAME chain.t COMMAND chain.t)
+  add_executable(HopfieldNetwork.t main2.cpp HopNetwork.cpp state.cpp )
+  target_link_libraries(HopfieldNetwork.t PRIVATE sfml-graphics)
+  #aggiungi l'eseguibile chain.t alla lista dei test, con nome chain.t
+  add_test(NAME HopfieldNetwork.t COMMAND HopfieldNetwork.t)
 
-#endif()
+endif()

@@ -29,7 +29,7 @@ int main(int argc, char** argv){
     std::ofstream fileTest4;
     
     std::string test = argv[1];
-    double a = stod(argv[argc-1]);
+    int a = stoi(argv[argc-1]);
 
     
     if (test=="1")
@@ -37,8 +37,8 @@ int main(int argc, char** argv){
         //Running simulation number 1: given n random memories, we will test whether random initial state of the netwok
         //will converge to real memories or to fictitious memories we didn't explicitly stored
 
-        int p = 5; //number of memories to be stored
-        int N_cycles = 500;  //number of cycles to perform 
+        int p = a; //number of memories to be stored
+        int N_cycles = 1000;  //number of cycles to perform 
         std::cout << "\nStoring p random memories and studying the convergence of random initial state...\n";
         
         std::string name = "/home/lorenzo17/HopfieldNetwork/data/test1_" +  to_string(N) +"_"+to_string(p)+ ".txt";
@@ -51,6 +51,7 @@ int main(int argc, char** argv){
             network.saveAsMemory(alpha);
         }
 
+        int counter = 0;
         for (int i = 0; i < N_cycles; i++)
         {
             network.randomShuffle(N);     //random setting the initial state
@@ -71,10 +72,13 @@ int main(int argc, char** argv){
             if ((it0==distanceFromMemories.end())&&(it30==distanceFromMemories.end()))
             {
                 fileTest1 << p+1 << std::endl;
+                counter++;
             }
             distanceFromMemories.clear();
-            std::cerr << (double)i/N_cycles*100 << " \% \n";
+            //std::cerr << (double)i/N_cycles*100 << " \% \n";
+            
         }
+        std::cerr << "When p =" << p << " , then number of fictitious memory is " << counter << '\n';
         fileTest1.close();
 
 

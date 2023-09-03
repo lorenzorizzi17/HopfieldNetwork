@@ -5,7 +5,7 @@
 
 void histo() {
 
-    int p = 5;
+    int p = 4;
     gROOT->SetStyle("Plain");
     gStyle->SetPalette(57);
     gStyle->SetOptTitle(0);
@@ -14,9 +14,11 @@ void histo() {
     gStyle->SetStatY(0.9);
     gStyle->SetStatW(0.5); 
     gStyle->SetStatH(0.2);
+    
 
     
-    TH1F* histo = new TH1F("", "",p+1,0.5,1.5+p);
+    TH1F* histo = new TH1F("Geometry of phase space (N=100, p=5)", "Geometry of phase space (N=100, p=5)",p+1,0.5,1.5+p);
+    histo->SetStats(kFALSE);
     histo->SetFillColor(kBlue);
     histo->SetLineColor(kBlack);
     histo->SetMarkerStyle(kFullCircle);
@@ -24,13 +26,13 @@ void histo() {
     /* histo->GetYaxis()->SetTitleOffset(1.2);
     histo->GetXaxis()->SetTitleSize(0.04);
     histo->GetYaxis()->SetTitleSize(0.04); */
-    histo->GetXaxis()->SetTitle("N.of cars");
+    histo->GetXaxis()->SetTitle("Memories n.");
     histo->GetYaxis()->SetTitle("Occurrences");
     histo->StatOverflows(true);
     histo->SetLabelSize(0.04);
 
     
-    std::ifstream myfile1 ("/home/lorenzo17/HopfieldNetwork/data/test1_100_5.txt", std::ifstream::in);
+    std::ifstream myfile1 ("/home/lorenzo17/HopfieldNetwork/data/test1_100_4.txt", std::ifstream::in);
     while(myfile1.good()){
         double x = 0;
         myfile1 >> x;

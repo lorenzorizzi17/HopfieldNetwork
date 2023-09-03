@@ -5,10 +5,11 @@ build/
 .vscode/
 .idea/
 CMakeSettings.json
-dump.cpp
-.out
+*.out
+*.t
 /vscode
 *.png
 *.jpg
 data/
 *.txt
+*.sh
