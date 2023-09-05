@@ -80,8 +80,6 @@ int main(int argc, char** argv){
         }
         std::cerr << "When p =" << p << " , then number of fictitious memory is " << counter << '\n';
         fileTest1.close();
-
-
     } else if (test=="2"){
 
         //Running simulation n.2: we will be testing the stability of the p stored memories
@@ -118,7 +116,7 @@ int main(int argc, char** argv){
         int N_cycles = 200;  //number of cycles to perform 
         int nRandomNoise = a*N; //number of bit to modify from saved memory
 
-        std::cout << "\nStudying the stability of p random stored memories adding a little random noise (altering " << nRandomNoise <<" bits)...\n";
+        std::cout << "\nStudying the stability of p = " << p <<  " random stored memories adding a little random noise (altering " << nRandomNoise <<" bits)...\n";
         
         //creating p random memories
         for (int i = 0; i < p; i++)

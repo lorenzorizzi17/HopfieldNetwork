@@ -10,7 +10,7 @@ int main() {
     srand((unsigned) time(NULL));
 
     //graphic constants and parameters
-    const int N =10*10;     //n. of HopNetwork (perfect square)
+    const int N =20*20;     //n. of HopNetwork (perfect square)
     const int n = std::sqrt(N);
     unsigned const display_height = 0.9 * sf::VideoMode::getDesktopMode().height; //=768
     int const fps = 60;
@@ -22,7 +22,11 @@ int main() {
 
     //random creation of the initial network state
     HopNetwork network = HopNetwork(N);
-    
+
+    State cat = State({-1,-1,-1,-1,-1,-1,-1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,-1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,-1,-1,-1,1,-1,-1,-1,-1,-1,-1,1,1,-1,-1,-1,-1,-1,-1,1,1,-1,-1,-1,1,1,-1,-1,-1,-1,1,1,1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,-1,-1,-1,1,1,-1,1,-1,-1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,1,1,1,1,-1,-1,-1,1,-1,-1,-1,-1,-1,1,1,-1,-1,1,-1,-1,-1,-1,1,1,1,1,-1,1,-1,-1,1,-1,-1,1,-1,-1,1,1,1,1,-1,-1,-1,-1,-1,1,1,1,-1,-1,-1,1,1,1,1,-1,-1,-1,-1,1,-1,1,1,1,-1,-1,1,1,-1,-1,-1,-1,-1,1,-1,1,1,1,-1,-1,-1,-1,-1,1,1,-1,-1,1,-1,-1,-1,-1,-1,1,-1,-1,-1,1,-1,1,1,-1,-1,-1,-1,-1,1,1,1,1,-1,-1,-1,1,1,1,1,-1,-1,1,1,-1,-1,-1,1,1,1,-1,-1,-1,-1,1,1,1,1,-1,-1,-1,-1,-1,-1,-1,1,1,-1,1,1,-1,-1,-1,1,1,-1,-1,1,1,1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,-1,1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,-1,-1,-1,-1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,-1,-1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1});
+    State house = State({-1,-1,1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,1,1,-1,-1,-1,-1,1,1,1,-1,1,1,-1,-1,-1,-1,-1,-1,1,1,-1,1,-1,-1,-1,-1,1,1,1,-1,-1,1,1,-1,-1,-1,1,1,1,-1,-1,1,1,-1,-1,-1,1,-1,1,-1,-1,-1,-1,-1,-1,1,1,-1,-1,-1,-1,-1,1,-1,-1,-1,1,-1,1,1,1,-1,-1,1,1,1,-1,-1,-1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1,-1,1,1,-1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,-1,1,1,-1,-1,-1,-1,1,-1,1,-1,-1,-1,-1,-1,1,1,-1,1,-1,-1,-1,1,1,-1,-1,-1,1,-1,1,1,-1,-1,-1,-1,1,1,-1,1,-1,1,1,1,1,1,-1,-1,1,-1,-1,-1,1,1,1,-1,-1,-1,-1,1,-1,-1,-1,1,-1,-1,-1,-1,1,-1,-1,-1,1,-1,1,-1,-1,-1,-1,1,-1,-1,-1,1,-1,-1,-1,-1,1,-1,-1,-1,1,-1,1,-1,1,1,-1,1,-1,-1,-1,1,-1,-1,-1,-1,1,-1,-1,-1,1,-1,1,-1,1,1,-1,1,-1,-1,-1,1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,-1,-1,-1,1,1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,-1,-1,1,1,-1,-1,-1,1,1,1,1,1,-1,-1,1,1,1,-1,-1,1,1,-1,-1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,-1,1,-1,1,1,-1,-1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1});
+    State snail = State({-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,1,-1,-1,-1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,-1,-1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,-1,-1,1,1,-1,-1,-1,-1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,1,1,-1,-1,1,-1,-1,-1,-1,1,-1,-1,-1,1,1,1,-1,-1,-1,-1,-1,1,1,-1,1,-1,-1,-1,-1,1,-1,1,-1,-1,-1,1,1,-1,-1,-1,-1,-1,1,-1,1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,-1,-1,-1,-1,1,1,1,1,1,-1,-1,1,1,-1,-1,-1,-1,-1,-1,1,1,-1,-1,-1,-1,1,1,-1,1,-1,-1,1,-1,1,-1,1,-1,-1,-1,-1,1,1,-1,-1,1,1,-1,-1,1,-1,-1,1,-1,-1,-1,-1,1,1,1,1,1,1,1,-1,1,-1,-1,1,-1,-1,-1,1,-1,-1,1,1,1,-1,1,-1,-1,-1,1,1,1,-1,-1,1,-1,-1,-1,1,1,1,1,-1,-1,-1,-1,-1,-1,1,-1,1,1,-1,-1,1,-1,-1,-1,-1,1,1,-1,-1,1,-1,-1,1,-1,-1,-1,1,1,-1,-1,1,-1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,-1,-1,-1,1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,-1,-1,-1,1,1,-1,-1,-1,-1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,-1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,-1,-1,-1,-1,-1,-1,1,1,1,1,1,1,1,1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1});
+    State pears = State({-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,-1,-1,-1,-1,-1,-1,-1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,-1,-1,-1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,1,-1,-1,-1,-1,-1,-1,-1,1,1,1,1,-1,-1,-1,-1,-1,-1,1,1,1,1,-1,-1,-1,-1,-1,-1,1,-1,-1,1,-1,-1,-1,-1,-1,1,1,-1,-1,1,-1,-1,-1,-1,-1,1,1,-1,-1,1,-1,-1,-1,-1,-1,1,-1,-1,-1,1,-1,-1,-1,-1,-1,1,-1,-1,-1,1,-1,-1,-1,-1,-1,1,-1,-1,-1,1,-1,-1,-1,-1,1,1,-1,-1,-1,1,-1,-1,-1,-1,-1,1,-1,-1,-1,1,1,-1,-1,-1,1,-1,-1,-1,-1,1,1,-1,-1,-1,1,1,-1,-1,-1,-1,1,1,-1,1,1,-1,-1,-1,-1,-1,1,1,-1,-1,1,-1,-1,-1,-1,-1,-1,1,1,1,-1,-1,-1,-1,-1,-1,-1,1,1,-1,1,-1,-1,-1,-1,-1,-1,-1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,1,-1,1,-1,-1,-1,-1,-1,-1,-1,1,1,1,-1,-1,-1,-1,-1,-1,-1,1,-1,1,1,-1,-1,-1,-1,-1,1,1,-1,1,1,-1,-1,-1,-1,-1,1,1,-1,-1,1,1,1,1,1,1,1,-1,-1,-1,1,1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1});
     //some graphic stuff (windows, buttons, HopNetwork...)
     sf::Color color(157,154,183);
     sf::Color gray(182,173,173);
@@ -103,7 +107,12 @@ int main() {
                     network.drawZ();
                 } 
                 else if (event.key.code==sf::Keyboard::P){
-                    std::cerr << "\nDistances are: (" << network.distanceFrom(network.getMemories()) << '\n';
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
+                    {
+                        network.setState(pears);
+                    } else {
+                        std::cerr << "\nDistances are: (" << network.distanceFrom(network.getMemories()) << '\n';
+                    }
                 } else if (event.key.code==sf::Keyboard::E){
                     network.evolveUntilConverge(1000);
                 } 
@@ -111,37 +120,52 @@ int main() {
                     if (network.getMemories().size() > 0){network.setState(network.getMemory(0));}
                 }
                 else if (event.key.code ==sf::Keyboard::Num1){
-                    if (network.getMemories().size() >= 1){network.setState(network.getMemory(1));}
+                    if (network.getMemories().size() > 1){network.setState(network.getMemory(1));}
                 }
                 else if (event.key.code == sf::Keyboard::Num2){
-                    if (network.getMemories().size() >= 2){network.setState(network.getMemory(2));}
+                    if (network.getMemories().size() > 2){network.setState(network.getMemory(2));}
                 }
                 else if (event.key.code ==sf::Keyboard::Num3){
-                    if (network.getMemories().size() >= 3){network.setState(network.getMemory(3));}
+                    if (network.getMemories().size() > 3){network.setState(network.getMemory(3));}
                 }
                 else if (event.key.code ==sf::Keyboard::Num4){
-                    if (network.getMemories().size() >= 4){network.setState(network.getMemory(4));}
+                    if (network.getMemories().size() > 4){network.setState(network.getMemory(4));}
                 }
                 else if (event.key.code ==sf::Keyboard::Num5){
-                    if (network.getMemories().size() >= 5){network.setState(network.getMemory(5));}
+                    if (network.getMemories().size() > 5){network.setState(network.getMemory(5));}
                 }
                 else if (event.key.code ==sf::Keyboard::Num6){
-                    if (network.getMemories().size() >= 6){network.setState(network.getMemory(6));}
+                    if (network.getMemories().size() > 6){network.setState(network.getMemory(6));}
                 }
                 else if (event.key.code ==sf::Keyboard::Num7){
-                    if (network.getMemories().size() >= 7){network.setState(network.getMemory(7));}
+                    if (network.getMemories().size() > 7){network.setState(network.getMemory(7));}
                 }
                 else if (event.key.code ==sf::Keyboard::Num8){
-                    if (network.getMemories().size() >= 8){network.setState(network.getMemory(8));}
+                    if (network.getMemories().size() > 8){network.setState(network.getMemory(8));}
                 }
                 else if (event.key.code ==sf::Keyboard::Num9){
-                    if (network.getMemories().size() >= 9){network.setState(network.getMemory(9));}
+                    if (network.getMemories().size() > 9){network.setState(network.getMemory(9));}
                 }
                 else if (event.key.code ==sf::Keyboard::R){
                     network.randomNoise(10);
                 }
                 else if (event.key.code == sf::Keyboard::C){
-                    network.getCorrelationMatrix().print();
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
+                    {
+                        network.setState(cat);
+                    } else {
+                        network.getCorrelationMatrix().print();
+                    } 
+                } else if (event.key.code == sf::Keyboard::H){
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
+                    {
+                        network.setState(house);
+                    }
+                } else if (event.key.code == sf::Keyboard::S){
+                    if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
+                    {
+                        network.setState(snail);
+                    }
                 }
             }
             
