@@ -2,7 +2,7 @@
 A C++ code to recreate a [Hopfield neural network](https://en.wikipedia.org/wiki/Hopfield_network) and to verify its capacity to 
 retain memories in a binary form. 
 
-Hopfield neural network is an exemple of RNN (Recurrent Neural Network), an artificial model used to recreate an associative memory (like the one humans experience). It has been shown that
+Hopfield neural network is an example of RNN (Recurrent Neural Network), an artificial model used to recreate an associative memory (like the one humans experience). It has been shown that
 some regions of the human hippocampus (CA3), responsible of the episodic memory, may work as a Hopfield-like network.
 
 Get started now with my code consulting my [wiki](https://github.com/lorenzorizzi17/HopfieldNetwork/wiki)!
